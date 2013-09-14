@@ -1,0 +1,41 @@
+# -*- mode: makefile-gmake; -*-
+
+CXX := clang++
+
+LLVM_COMPONENTS := \
+jit interpreter irreader nativecodegen codegen \
+bitreader bitwriter ipo linker instrumentation core mc
+
+CLANG_LIBS := \
+-lclang -lclangFrontend -lclangFrontendTool -lclangDriver -lclangSerialization \
+-lclangCodeGen -lclangParse -lclangSema -lclangEdit \
+-lclangAnalysis -lclangAST -lclangLex -lclangBasic\
+-lclangRewriteCore -lclangRewriteFrontend -lclangStaticAnalyzerFrontend \
+-lclangStaticAnalyzerCheckers -lclangStaticAnalyzerCore -lclangARCMigrate -lclangTooling -lclangASTMatchers
+
+CPPFLAGS += $(shell llvm-config-3.4 --cflags) -std=c++11
+LDFLAGS += $(shell llvm-config-3.4 --ldflags --libs $(LLVM_COMPONENTS))
+
+SRCS := $(wildcard *.cpp)
+OBJS := $(SRCS:.cpp=.o)
+EXES := $(SRCS:.cpp=.out)
+
+LIBRARYNAME = my_plugin.so
+
+.PHONY : all test clean rebuild
+
+all: $(LIBRARYNAME)
+
+rebuild: clean all
+
+.cpp.o:
+	$(CXX) $(CPPFLAGS) -c $< -o $@
+
+$(LIBRARYNAME) : $(OBJS)
+	$(CXX) -shared $(OBJS) $(CLANG_LIBS) $(LDFLAGS) -o $@
+
+test:
+	./test.sh
+
+clean:
+	$(RM) *.out *.o
