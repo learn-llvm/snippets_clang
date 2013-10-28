@@ -1,7 +1,5 @@
 #!/usr/bin/python3
 
-import sys
-
 
 def main():
     from clang.cindex import Index
@@ -19,10 +17,10 @@ def main():
     parser.add_argument("--max-depth", dest='maxDepth',
                         help="limit cursor expansion to depth N",
                         metavar="N", type=int, default=None)
-    opts, unknown = parser.parse_known_args(sys.argv)
+    opts, unknown = parser.parse_known_args()
 
     index = Index.create()
-    tu = index.parse(None, args=sys.argv[1:])
+    tu = index.parse(None, unknown)
     if not tu:
         parser.error("unable to load input")
 
