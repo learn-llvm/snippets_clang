@@ -11,7 +11,6 @@
 #include <cstdio>
 #include <cstring>
 
-
 #define AST_DEBUG
 
 class AST_Buffer {
@@ -85,18 +84,28 @@ class AST_Formatter {
 static const struct {
   enum CXTypeKind kind;
   const char *name;
-} ast_builtin_types[] = {
-  {CXType_Void, "void"}, {CXType_Bool, "bool"}, {CXType_Char_U, "char"},
-  {CXType_Char_S, "char"}, {CXType_UChar, "unsigned char"},
-  {CXType_SChar, "signed char"}, {CXType_WChar, "wchar_t"},
-  {CXType_Char16, "char16_t"}, {CXType_Char32, "char32_t"},
-  {CXType_Short, "short"}, {CXType_UShort, "unsigned short"},
-  {CXType_Int, "int"}, {CXType_UInt, "unsigned int"}, {CXType_Long, "long"},
-  {CXType_ULong, "unsigned long"}, {CXType_LongLong, "unsigned long"},
-  {CXType_ULongLong, "unsigned long long"}, {CXType_Int128, "__int128"},
-  {CXType_UInt128, "unsigned __int128"}, {CXType_Float, "float"},
-  {CXType_Double, "double"}, {CXType_LongDouble, "long double"},
-};
+} ast_builtin_types[] = {{CXType_Void, "void"},
+                         {CXType_Bool, "bool"},
+                         {CXType_Char_U, "char"},
+                         {CXType_Char_S, "char"},
+                         {CXType_UChar, "unsigned char"},
+                         {CXType_SChar, "signed char"},
+                         {CXType_WChar, "wchar_t"},
+                         {CXType_Char16, "char16_t"},
+                         {CXType_Char32, "char32_t"},
+                         {CXType_Short, "short"},
+                         {CXType_UShort, "unsigned short"},
+                         {CXType_Int, "int"},
+                         {CXType_UInt, "unsigned int"},
+                         {CXType_Long, "long"},
+                         {CXType_ULong, "unsigned long"},
+                         {CXType_LongLong, "unsigned long"},
+                         {CXType_ULongLong, "unsigned long long"},
+                         {CXType_Int128, "__int128"},
+                         {CXType_UInt128, "unsigned __int128"},
+                         {CXType_Float, "float"},
+                         {CXType_Double, "double"},
+                         {CXType_LongDouble, "long double"}, };
 
 /*! Get spelling for given cursor.
  */
@@ -343,8 +352,7 @@ class AST_Traverser {
     clang_getExpansionLocation(location, &file, NULL, NULL, NULL);
     if (file) {
       if (strcmp(clang_getCString(clang_getFileName(file)),
-                 context.tu_filename) ==
-          0) {
+                 context.tu_filename) == 0) {
         /* Process node if it is from file passed to traverse().
          */
         return true;

@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <clang-c/Index.h>
+#include <getopt.h>
 
 #define MAX_VAR_LENGTH 128
 
@@ -40,7 +41,7 @@ enum CXChildVisitResult visitor_f(CXCursor cursor, CXCursor parent,
                                  &column, &offset);
 
   if (!clang_getFileName(file).data) {
-    //printf("visitor(): no file data, visit sibling\n");
+    // printf("visitor(): no file data, visit sibling\n");
     return CXChildVisit_Continue;
   }
 
@@ -104,8 +105,11 @@ int main(int argc, char* argv[]) {
 
   // TODO hard code
   const char* command_line_args[] = {
-    "-I/usr/include/x86_64-linux-gnu", "-I/usr/lib/gcc/x86_64-linux-gnu/4.4.7/include", "-I/usr/include/c++/4.4", "-I/usr/include/c++/4.4/x86_64-linux-gnu", "-I/usr/lib/llvm-3.3/include"
-  };
+      "-I/usr/include/x86_64-linux-gnu",
+      "-I/usr/lib/gcc/x86_64-linux-gnu/4.4.7/include",
+      "-I/usr/include/c++/4.4",
+      "-I/usr/include/c++/4.4/x86_64-linux-gnu",
+      "-I/usr/lib/llvm-3.3/include"};
 
   for (int i = 0; i < fcnt; i++) {
     tu_array[i] = clang_parseTranslationUnit(

@@ -11,18 +11,18 @@ CLANG_LIBS := \
 -lclangCodeGen -lclangParse -lclangSema -lclangEdit \
 -lclangAnalysis -lclangAST -lclangLex -lclangBasic\
 -lclangRewriteCore -lclangRewriteFrontend -lclangStaticAnalyzerFrontend \
--lclangStaticAnalyzerCheckers -lclangStaticAnalyzerCore -lclangARCMigrate 
+-lclangStaticAnalyzerCheckers -lclangStaticAnalyzerCore -lclangARCMigrate
 
 CPPFLAGS += $(shell llvm-config-3.4 --cflags) -std=c++11
 LDFLAGS += $(shell llvm-config-3.4 --ldflags --libs $(LLVM_COMPONENTS))
 
-SRCS := $(wildcard *.cpp)
-OBJS := $(SRCS:.cpp=.o)
-EXES := $(SRCS:.cpp=.out)
+SRCS := $(wildcard *.cc)
+OBJS := $(SRCS:.cc=.o)
+EXES := $(SRCS:.cc=.out)
 
 all: $(EXES)
 
-.cpp.o:
+.cc.o:
 	$(CXX) $(CPPFLAGS) -c $< -o $@
 
 .o.out:

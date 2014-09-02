@@ -16,9 +16,10 @@ using namespace clang::ast_matchers;
 StatementMatcher LoopMatcher = forStmt(
     hasLoopInit(declStmt(hasSingleDecl(varDecl(
         hasInitializer(integerLiteral(equals(0)))).bind("initVarName")))),
-    hasIncrement(unaryOperator(hasOperatorName("++"),
-                               hasUnaryOperand(declRefExpr(to(varDecl(hasType(
-                                   isInteger())).bind("incVarName")))))),
+    hasIncrement(unaryOperator(
+        hasOperatorName("++"),
+        hasUnaryOperand(declRefExpr(
+            to(varDecl(hasType(isInteger())).bind("incVarName")))))),
     hasCondition(binaryOperator(
         hasOperatorName("<"),
         hasLHS(ignoringParenImpCasts(declRefExpr(
