@@ -1,0 +1,23 @@
+set(LIBCLANG_TOOLS
+  ast
+  cc_lookup
+  childvisitor
+  clang_test_it
+  clang_visit
+  CodeComplete
+  compilation_db
+  diagnose
+  diagnosis
+  func_sig
+  inclusion_visitor
+  libclang_wrapper
+  symbol_scanner
+  token
+  visit_test
+  )
+
+list(APPEND FULL_LLVM_LIBS -lclang)
+
+foreach( TOOL ${LIBCLANG_TOOLS})
+  add_subdirectory(${TOOL})
+endforeach()

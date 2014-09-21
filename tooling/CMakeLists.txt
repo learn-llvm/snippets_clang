@@ -1,0 +1,35 @@
+set(CLANG_LIBS
+  -Wl,--start-group
+  -lclangAST
+  -lclangAnalysis
+  -lclangBasic
+  -lclangDriver
+  -lclangEdit
+  -lclangFrontend
+  -lclangFrontendTool
+  -lclangLex
+  -lclangParse
+  -lclangSema
+  -lclangEdit
+  -lclangASTMatchers
+  -lclangRewrite
+  -lclangRewriteFrontend
+  -lclangStaticAnalyzerFrontend
+  -lclangStaticAnalyzerCheckers
+  -lclangStaticAnalyzerCore
+  -lclangSerialization
+  -lclangTooling
+  -Wl,--end-group
+  )
+
+set(CLANG_TOOLS
+  clang_check
+  rewrite1
+  rewrite2
+  rewrite3
+  toplevel_decls
+  try_matcher
+  )
+foreach(TOOL ${CLANG_TOOLS})
+  add_subdirectory(${TOOL})
+endforeach()

@@ -1,6 +1,0 @@
-include(CheckFunctionExists)
-include(CheckCXXSourceCompiles)
-include(CheckLibraryExists)
-include(CPack)
-enable_testing()
-add_test(FuncName /home/hongxuchen/data_backup/llvm_clang/llvm_misc/clangtest/cmake_clang/test.sh)
