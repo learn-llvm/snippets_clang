@@ -133,8 +133,8 @@ static const char *ast_type_spelling(CXType type) {
     return ast_cursor_spelling(type_decl);
   }
 
-  for (int i = 0; i < sizeof(ast_builtin_types) / sizeof(ast_builtin_types[0]);
-       ++i) {
+  for (std::size_t i = 0;
+       i < sizeof(ast_builtin_types) / sizeof(ast_builtin_types[0]); ++i) {
     if (ast_builtin_types[i].kind == type.kind) {
       return ast_builtin_types[i].name;
     }

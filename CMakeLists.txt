@@ -5,7 +5,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 set (CMAKE_EXPORT_COMPILE_COMMANDS 1)
 add_definitions("-O3 -fno-rtti -fno-exceptions -Wextra -Wno-unused-parameter -ggdb")
-set(CMAKE_CXX_FLAGS "-std=c++1y")
+set(CMAKE_CXX_FLAGS "-std=c++1y -fcolor-diagnostics")
 
 find_package(Llvm REQUIRED)
 add_definitions("${LLVM_CFLAGS}")

@@ -1,7 +1,5 @@
 set(LIBCLANG_TOOLS
-  ast
   cc_lookup
-  childvisitor
   clang_test_it
   clang_visit
   CodeComplete

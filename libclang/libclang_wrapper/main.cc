@@ -2,9 +2,22 @@
 #include "CursorCounter.hpp"
 #include <llvm/Support/raw_ostream.h>
 
-const char *filename;
+typedef unsigned LevelType;
 
+const char *filename;
 using namespace llvm;
+
+CXChildVisitResult visitChildrenCallback(CXCursor cursor, CXCursor parent,
+                                         CXClientData client_data) {
+  CursorInfo cursorInfo = CursorInfo::getCursorInfo(cursor);
+  cursorInfo.dump();
+  LevelType level = *(LevelType *)client_data;
+  errs() << '\n' << level << '\n';
+  unsigned next = level + 1;
+  clang_visitChildren(cursor, visitChildrenCallback, &next);
+
+  return CXChildVisit_Continue;
+}
 
 int main(int argc, char **argv) {
   if (argc < 2) {
@@ -18,8 +31,16 @@ int main(int argc, char **argv) {
       CXTranslationUnit_PrecompiledPreamble |
           CXTranslationUnit_DetailedPreprocessingRecord);
   clang_reparseTranslationUnit(TU, 0, nullptr, 0);
-  CursorCounter &counter = CursorCounter::getInstance();
-  counter.visit(TU);
-  counter.dump();
+
+  errs() << "clang version: " << getStrFromCXString(clang_getClangVersion())
+         << '\n';
+
+  LevelType level = 0;
+  CXCursor cursor = clang_getTranslationUnitCursor(TU);
+  clang_visitChildren(cursor, visitChildrenCallback, &level);
+
+  clang_disposeTranslationUnit(TU);
+  clang_disposeIndex(idx);
+
   return 0;
 }
