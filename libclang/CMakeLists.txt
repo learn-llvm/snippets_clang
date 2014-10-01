@@ -1,16 +1,12 @@
 set(LIBCLANG_TOOLS
   cc_lookup
   clang_test_it
-  clang_visit
+  match_symbol
   CodeComplete
-  compilation_db
-  diagnose
   diagnosis
   func_sig
-  inclusion_visitor
   libclang_wrapper
   token
-  visit_test
   )
 
 list(APPEND FULL_LLVM_LIBS -lclang)

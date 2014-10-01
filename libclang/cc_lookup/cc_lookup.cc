@@ -1,24 +1,11 @@
-/**
- * @file   cc_lookup.cpp
- * @brief  a simple program to lookup the definition of the cursorbol given its
-* (line, column)
- *
- * @author Hongxu Chen
- * @date   2013-05-01
- */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 #include <clang-c/Index.h>
 
-const int ARG_NUM = 4; /// *test
+const int ARG_NUM = 4;  /// *test
 
-/**
- * \brief a wrapper to print CXString and release the malloc space
- * \c Note that it has not so much functionality
- * @param cx_str the CXString to be printed and disposed
- */
 static inline void printCXString(CXString cx_str) {
   const char* c_str = clang_getCString(cx_str);
   if (c_str) {
@@ -93,12 +80,6 @@ static void printCursor(CXTranslationUnit TU, CXSourceLocation location) {
   }
   CXCursor realCursor = clang_getCanonicalCursor(cursor);
   clang_disposeString(fileName);
-  printf("\n[kind]:");
-  printCXString(clang_getCursorKindSpelling(clang_getCursorKind(cursor)));
-  printf("\n[name]:");
-  printCXString(clang_getCursorDisplayName(cursor));
-  printf("\n[USR]");
-  printCXString(clang_getCursorUSR(cursor));
   printf("\n[doc]");
   printCXString(clang_Cursor_getBriefCommentText(cursor));
   printf("\n[rawdoc]");
@@ -156,7 +137,7 @@ int main(int argc, char* argv[]) {
   }
 
   CXIndex index = clang_createIndex(0, 0);
-  const char* const* clang_args = (const char* const*)(argv + ARG_NUM);
+  const char* const* clang_args = (const char * const*)(argv + ARG_NUM);
   CXTranslationUnit TU = clang_parseTranslationUnit(
       index,
       org_file_name,   // source_filename, 0 if included in command_line_args

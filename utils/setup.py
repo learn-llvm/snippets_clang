@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import os
-import subprocess
 import shutil
 
 myfile = '/home/hongxu/repos/snippets_clang/tooling/clang_check/CMakeLists.txt'
@@ -13,7 +12,7 @@ for f in os.listdir(current_dir):
         if not os.path.isfile(prefix):
             os.mkdir(prefix)
         shutil.move(f, os.path.join(current_dir, prefix))
-        shutil.copy(myfile, os.path.join(current_dir,prefix))
+        shutil.copy(myfile, os.path.join(current_dir, prefix))
 
 for f in os.listdir(current_dir):
     if os.path.isdir(f):

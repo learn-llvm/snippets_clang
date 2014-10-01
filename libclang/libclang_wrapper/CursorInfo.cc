@@ -69,6 +69,8 @@ void CursorInfo::dump() {
 
   errs() << "cursor String: "
          << getStrFromCXString(clang_getCursorSpelling(cursor_)) << '\n';
+  errs() << "cursor DisplayName: "
+         << getStrFromCXString(clang_getCursorDisplayName(cursor_)) << '\n';
   dumpIfNotNullCXStr("cursor USR", clang_getCursorUSR(cursor_));
   if (clang_isPreprocessing(kind_)) {
     if (expand_.filename_.empty()) {

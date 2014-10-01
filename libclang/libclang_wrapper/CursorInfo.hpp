@@ -26,9 +26,20 @@ struct LocPoint {
   LocPoint &operator=(LocPoint const &) = delete;
 };
 
+struct Comment {
+  std::string comment;
+};
+
+struct XMLComment : Comment {
+  void parser();
+};
+
+struct HTMLComment : Comment {
+  void parser();
+};
+
 class CursorInfo {
   CXCursor cursor_;
-  std::string cursorStr_;
   LocPoint presumed_, expand_, spelling_;
   CXFile included_;
   CXCursor lexParent_, semaParent_, parent_;

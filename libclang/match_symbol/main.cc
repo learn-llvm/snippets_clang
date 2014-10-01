@@ -57,8 +57,8 @@ enum CXChildVisitResult visitor_f(CXCursor cursor, CXCursor parent,
 }
 
 int main(int argc, char* argv[]) {
-  if (argc < 2) {
-    fprintf(stderr, "Usage:\n\t <-s symbol> <-f file1>[,file2]...\n");
+  if (argc < 5) {
+    fprintf(stderr, "Usage:\n%s <-s symbol> <-f file1>[,file2]...\n", argv[0]);
     return 1;
   }
 
