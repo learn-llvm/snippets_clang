@@ -1,21 +1,37 @@
 #include "CursorInfo.hpp"
 #include "CursorCounter.hpp"
 #include <llvm/Support/raw_ostream.h>
+#include <llvm/Support/Format.h>
 
 typedef unsigned LevelType;
 
-const char *filename;
 using namespace llvm;
 
-CXChildVisitResult visitChildrenCallback(CXCursor cursor, CXCursor parent,
-                                         CXClientData client_data) {
+struct ClientInfo {
+  LevelType level;
+  std::string filename;
+};
+
+enum CXChildVisitResult visitChildrenCallback(CXCursor cursor, CXCursor parent,
+                                              CXClientData client_data) {
+  auto *info = static_cast<ClientInfo *>(client_data);
+  ///
+  CXFile file;
+  clang_getInstantiationLocation(clang_getCursorLocation(cursor), &file,
+                                 nullptr, nullptr, nullptr);
+  if (file == nullptr) {
+    return CXChildVisit_Continue;
+  }
+  std::string filename(getStrFromCXString(clang_getFileName(file)));
+  std::string const &wantFilename = info->filename;
+  if (filename != wantFilename) {
+    return CXChildVisit_Continue;
+  }
+  ///
+  errs() << '\n' << info->level++ << '\n';
   CursorInfo cursorInfo = CursorInfo::getCursorInfo(cursor);
   cursorInfo.dump();
-  LevelType level = *(LevelType *)client_data;
-  errs() << '\n' << level << '\n';
-  unsigned next = level + 1;
-  clang_visitChildren(cursor, visitChildrenCallback, &next);
-
+  /// clang_visitChildren(cursor, visitChildrenCallback, &info);
   return CXChildVisit_Continue;
 }
 
@@ -24,7 +40,7 @@ int main(int argc, char **argv) {
     std::fprintf(stderr, "usage: %s ${c_cxx_src_file}", argv[0]);
     std::exit(1);
   }
-  filename = argv[1];
+  char const *filename = argv[1];
   CXIndex idx = clang_createIndex(1, 0);
   CXTranslationUnit TU = clang_parseTranslationUnit(
       idx, filename, argv + 2, argc - 2, 0, 0,
@@ -35,9 +51,9 @@ int main(int argc, char **argv) {
   errs() << "clang version: " << getStrFromCXString(clang_getClangVersion())
          << '\n';
 
-  LevelType level = 0;
   CXCursor cursor = clang_getTranslationUnitCursor(TU);
-  clang_visitChildren(cursor, visitChildrenCallback, &level);
+  ClientInfo info{0, filename};
+  clang_visitChildren(cursor, visitChildrenCallback, &info);
 
   clang_disposeTranslationUnit(TU);
   clang_disposeIndex(idx);

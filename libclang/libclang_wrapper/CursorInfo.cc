@@ -88,9 +88,9 @@ void CursorInfo::dump() {
     errs() << "included : " << getStrFromCXString(clang_getFileName(included_));
   }
 
-  dumpIfLocExist("expandPoint", expand_);
   dumpIfLocExist("presumedPoint", presumed_);
-  dumpIfLocExist("instantiationPoint", instantantiation_);
+  dumpIfLocExist("expandPoint", expand_);
+  dumpIfLocExist("spellingPoint", spelling_);
 
   dumpIfNotNullCXStr("semParent", clang_getCursorSpelling(semaParent_));
   dumpIfNotNullCXStr("lexParent", clang_getCursorSpelling(lexParent_));
@@ -109,10 +109,8 @@ CursorInfo CursorInfo::getCursorInfo(CXCursor cursor) {
   LocPoint expandPoint =
       LocPoint::getLocPoint(location, clang_getExpansionLocation);
   LocPoint presumedPoint = LocPoint::getPresumedPoint(location);
-  LocPoint instantiationPoint =
-      LocPoint::getLocPoint(location, clang_getInstantiationLocation);
   LocPoint spellingPoint =
       LocPoint::getLocPoint(location, clang_getSpellingLocation);
-  return CursorInfo(std::move(cursor), std::move(expandPoint),
-                    std::move(presumedPoint), std::move(instantiationPoint));
+  return CursorInfo(std::move(cursor), std::move(presumedPoint),
+                    std::move(expandPoint), std::move(spellingPoint));
 }

@@ -9,7 +9,6 @@ set(LIBCLANG_TOOLS
   func_sig
   inclusion_visitor
   libclang_wrapper
-  symbol_scanner
   token
   visit_test
   )

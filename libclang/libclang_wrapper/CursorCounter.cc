@@ -1,7 +1,7 @@
 #include "CursorCounter.hpp"
 #include "llvm/Support/raw_ostream.h"
 
-extern char const *filename;
+char const *filename;
 
 CXChildVisitResult statsVisitor(CXCursor cursor, CXCursor parent,
                                 CXClientData client_data) {

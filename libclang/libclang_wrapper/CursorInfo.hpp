@@ -29,7 +29,7 @@ struct LocPoint {
 class CursorInfo {
   CXCursor cursor_;
   std::string cursorStr_;
-  LocPoint expand_, presumed_, instantantiation_;
+  LocPoint presumed_, expand_, spelling_;
   CXFile included_;
   CXCursor lexParent_, semaParent_, parent_;
   CXLinkageKind linkage_;
@@ -38,11 +38,11 @@ class CursorInfo {
  public:
   static CursorInfo getCursorInfo(CXCursor cursor);
   CursorInfo(CXCursor &&cursor, LocPoint &&expand, LocPoint &&presumed,
-             LocPoint &&instantantiation)
+             LocPoint &&spelling)
       : cursor_(cursor),
-        expand_(std::move(expand)),
         presumed_(std::move(presumed)),
-        instantantiation_(std::move(instantantiation)) {
+        expand_(std::move(expand)),
+        spelling_(std::move(spelling)) {
     init();
   }
   CursorInfo &operator=(CursorInfo const &) = delete;
