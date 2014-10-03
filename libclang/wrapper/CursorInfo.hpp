@@ -2,7 +2,6 @@
 #define CURSORINFO_HPP
 
 #include <functional>
-
 #include "Common.hpp"
 
 struct LocPoint {

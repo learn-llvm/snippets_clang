@@ -12,6 +12,7 @@ add_definitions("${LLVM_CFLAGS}")
 
 include_directories(${LLVM_SRC_ROOT}/tools/clang/include)
 include_directories(${LLVM_OBJ_ROOT}/tools/clang/include)
+include_directories(${CMAKE_SOURCE_DIR}/libclang)
 
 set(FULL_LLVM_LIBS ${LLVM_SYSTEM_LIBS} ${LLVM_MODULE_LIBS})
 

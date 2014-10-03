@@ -1,7 +1,7 @@
 #include "CursorInfo.hpp"
 #include "CursorCounter.hpp"
-#include "llvm/Support/raw_ostream.h"
-#include "llvm/Support/Format.h"
+
+#include "Common.hpp"
 #include <map>
 
 using namespace llvm;
@@ -51,7 +51,6 @@ LocPoint LocPoint::getPresumedPoint(CXSourceLocation location) {
   // it is guaranteed that fileCXStr not null
   clang_getPresumedLocation(location, &fileCXStr, &line, &column);
   LocPoint presumed(getStrFromCXString(fileCXStr), line, column, offset);
-  clang_disposeString(fileCXStr);
   return presumed;
 }
 
@@ -96,6 +95,22 @@ void CursorInfo::dump() {
 
   dumpIfNotNullCXStr("semParent", clang_getCursorSpelling(semaParent_));
   dumpIfNotNullCXStr("lexParent", clang_getCursorSpelling(lexParent_));
+
+  auto rawCommentCXStr = clang_Cursor_getRawCommentText(cursor_);
+  if (rawCommentCXStr.data != nullptr) {
+    errs() << "raw: " << getStrFromCXString(rawCommentCXStr) << '\n';
+    auto briefCommentCXStr = clang_Cursor_getBriefCommentText(cursor_);
+    dumpIfNotNullCXStr("brief", briefCommentCXStr);
+    auto comment = clang_Cursor_getParsedComment(cursor_);
+    auto dumpFormattedComment = [&comment](auto &hint, auto generator) {
+      auto formatCXStr = generator(comment);
+      if (formatCXStr.data != nullptr) {
+        errs() << hint << ": " << getStrFromCXString(formatCXStr);
+      }
+    };
+    dumpFormattedComment("XML", clang_FullComment_getAsXML);
+    dumpFormattedComment("HTML", clang_FullComment_getAsHTML);
+  }
 }
 
 void CursorInfo::init() {

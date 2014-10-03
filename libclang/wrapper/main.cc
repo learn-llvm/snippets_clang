@@ -1,7 +1,5 @@
 #include "CursorInfo.hpp"
 #include "CursorCounter.hpp"
-#include <llvm/Support/raw_ostream.h>
-#include <llvm/Support/Format.h>
 
 typedef unsigned LevelType;
 
@@ -51,9 +49,15 @@ int main(int argc, char **argv) {
   errs() << "clang version: " << getStrFromCXString(clang_getClangVersion())
          << '\n';
 
-  CXCursor cursor = clang_getTranslationUnitCursor(TU);
+  auto cursor = clang_getTranslationUnitCursor(TU);
+  auto cursorInfo = CursorInfo::getCursorInfo(cursor);
+  cursorInfo.dump();
+  errs() << "\n\n";
+  /// auto module = clang_Cursor_getModule(cursor);
+  /// errs() << getStrFromCXString(clang_Module_getName(module));
   ClientInfo info{0, filename};
   clang_visitChildren(cursor, visitChildrenCallback, &info);
+  /// clang_visitChildren(cursor, visitChildrenCallback, nullptr);
 
   clang_disposeTranslationUnit(TU);
   clang_disposeIndex(idx);

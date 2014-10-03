@@ -1,12 +1,9 @@
 set(LIBCLANG_TOOLS
-  cc_lookup
-  clang_test_it
-  match_symbol
-  CodeComplete
+  cursor
+  match
+  ccomplete
   diagnosis
-  func_sig
-  libclang_wrapper
-  token
+  wrapper
   )
 
 list(APPEND FULL_LLVM_LIBS -lclang)
@@ -14,3 +11,11 @@ list(APPEND FULL_LLVM_LIBS -lclang)
 foreach( TOOL ${LIBCLANG_TOOLS})
   add_subdirectory(${TOOL})
 endforeach()
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+project(Common)
+add_library(${PROJECT_NAME} STATIC
+  Common.cc
+  )
+target_link_libraries(${PROJECT_NAME} ${CLANG_LIBS} ${FULL_LLVM_LIBS})

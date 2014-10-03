@@ -4,4 +4,4 @@
 *.a
 *.ll
 *.bc
-/build/
+build/
