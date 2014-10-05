@@ -17,13 +17,19 @@ void foo(int* a, int* b) {
   if (a[0] > 1) {
     b[0] = 2;
   }
+  else{
+    b[0]=1; 
+  }
 }
 
-void bar(float x, float y) { x + y; }  // just a declaration
+void bar(float x, float y);
 
 float baz() { return gfloat + **gppfloat; }
 
 void bang(int* arr, int v) {
+  while(v--){
+    arr[i] += v;
+  }
   for (int i = 0; i < v; ++i) {
     arr[i] -= i;
   }
