@@ -1,0 +1,17 @@
+get_filename_component(PROJECTID ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+string(REPLACE " " "_" PROJECTID ${PROJECTID})
+project(${PROJECTID})
+
+set(EXECUTABLE_NAME "${PROJECTID}")
+add_library(${EXECUTABLE_NAME} SHARED MyCheckers.cc)
+target_link_libraries(${EXECUTABLE_NAME} ${FULL_LLVM_LIBS})
+
+# set(LLVM_ROOT_DIRECTORY "/home/hongxu/marple-llvm/llvm/cmake")
+# set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${LLVM_ROOT_DIRECTORY}")
+# set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${LLVM_ROOT_DIRECTORY}/modules")
+# find_package(LLVM)
+# include(AddLLVM)
+# add_definitions(${LLVM_DEFINITIONS})
+# include_directories(${LLVM_INCLUDE_DIRS})
+# link_directories(${LLVM_LIBRARY_DIRS})
+# add_llvm_loadable_module(${EXECUTABLE_NAME} SHARED MyCheckers.cc)

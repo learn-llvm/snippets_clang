@@ -1,0 +1,34 @@
+# Precompilered Header File
+*.pch
+*.gch
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# Executable Target File
+obfs
+a.out
+
+# Swap file of vim 
+*.swp
+
+# pack
+*.zip
+*.rar
+*.tar
+*.bz
+*.gz
+
+# test file
+@*
+_X*

@@ -1,0 +1,11 @@
+# build spam
+*.o
+
+# Vim spam
+*.swp
+
+# backup files
+*~
+
+# build directory
+build

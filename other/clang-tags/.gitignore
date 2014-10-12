@@ -1,0 +1,7 @@
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+*.cmake
+Makefile
+clang-tags
+/CLTAGS

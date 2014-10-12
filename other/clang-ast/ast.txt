@@ -1,0 +1,297 @@
+Decl = TranslationUnitDecl(Decl*)
+     | NamedDecl
+     | LinkageSpecDecl(Decl)
+     | ObjCPropertyImplDecl
+     | FileScopeAsmDecl(StringLiteral)
+     | AccessSpecDecl()
+     | FriendDecl(Decl)
+     | FriendDecl(Type)
+     | StaticAssertDecl(Expr, StringLiteral)
+     // Extensions
+     | BlockDecl
+     | ClassScopeFunctionSpecializationDecl
+     | ImportDecl
+
+DeclContext = TranslationUnitDecl
+            | NamespaceDecl
+            | FunctionDecl
+            | TagDecl
+            | ObjCMethodDecl
+            | ObjCContainerDecl
+            | LinkageSpecDecl
+            | BlockDecl
+
+NamedDecl = NamespaceDecl(DeclarationName?, Decl*)
+          | UsingDirectiveDecl(NamespaceDeclRef, NestedNameSpecifier?)
+          | NamespaceAliasDecl(DeclarationName, NestedNameSpecifier?, NamespaceDeclRef);
+          | LabelDecl(DeclarationName)
+          | TypeDecl
+          | ValueDecl
+          | TemplateDecl
+          | UsingDecl(NestedNameSpecifier, DeclarationName)
+          | UsingShadowDecl(DeclRef*)
+          | ObjCMethodDecl
+          | ObjCContainerDecl
+          | ObjCPropertyDecl
+          | ObjCCompatibleAliasDecl
+
+TypeDecl = TypedefNameDecl
+         | UnresolvedUsingTypenameDecl(DeclarationName, NestedNameSpecifier)
+         | TagDecl
+         | TemplateTypeParmDecl(DeclarationName? name, Type? default)
+
+TypedefNameDecl = TypedefDecl(DeclarationName, Type)
+                | TypeAliasDecl(DeclarationName, Type)
+
+TagDecl = EnumDecl(DeclarationName, Type? NestedNameSpecifier?, EnumConstantDecl*)
+        | RecordDecl
+
+RecordDecl = RecordDecl(DeclarationName?, FieldDecl*)
+           | CXXRecordDecl
+
+CXXRecordDecl = CXXRecordDecl(DeclarationName?, CXXBaseSpecifier*, Decl*)
+              | ClassTemplateSpecializationDecl
+
+ClassTemplateSpecializationDecl = ClassTemplateSpecializationDecl(DeclarationName, TemplateSpecializationType, CXXBaseSpecifier*, Decl*)
+                                | ClassTemplatePartialSpecializationDecl(DeclarationName, TemplateSpecializationType, TemplateArgument*, CXXBaseSpecifier*, Decl*)
+
+ValueDecl = EnumConstantDecl(DeclarationName name, Expr? init)
+          | UnresolvedUsingValueDecl(DeclarationName, NestedNameSpecifier)
+          | IndirectFieldDecl(FieldDeclRef*)
+          | DeclaratorDecl
+
+DeclaratorDecl = FunctionDecl
+               | FieldDecl
+               | VarDecl
+               | NonTypeTemplateParmDecl(DeclarationName?, Type)
+
+FunctionDecl = FunctionDecl(DeclarationName, NestedNameSpecifier?, FunctionType, Stmt?)
+             | CXXMethodDecl
+
+CXXMethodDecl = CXXMethodDecl(DeclarationName, NestedNameSpecifier?, FunctionType, Stmt?)
+              | CXXConstructorDecl(DeclarationName, NestedNameSpecifier?, FunctionType, CXXCtorInitializer*, Stmt?)
+              | CXXDestructorDecl(DeclarationName, NestedNameSpecifier?, FunctionType, Stmt?)
+              | CXXConversionDecl(DeclarationName, NestedNameSpecifier?, FunctionType, Stmt?)
+
+CXXCtorInitializer = CXXCtorInitializer(Type, Expr)
+                   | CXXCtorInitializer(FieldDeclRef, Expr)
+
+FieldDecl = FieldDecl(DeclarationName? name, Type type, Expr? init)
+          | FieldDecl(DeclarationName name, Type type, Expr width)
+          | ObjCIvarDecl
+          | ObjCAtDefsFieldDecl
+
+VarDecl = VarDecl(DeclarationName?, NestedNameSpecifier?, Type, Expr?)
+        | ImplicitParamDecl(DeclarationName, Type)
+        | ParmVarDecl(DeclarationName?, Type, Expr?)
+
+TemplateDecl = RedeclarableTemplateDecl
+             | TemplateTemplateParmDecl(DeclarationName? name, Decl* parm)
+
+RedeclarableTemplateDecl = FunctionTemplateDecl(FunctionDecl, Decl* parm)
+                         | ClassTemplateDecl(CXXRecordDecl, Decl* parm)
+                         | TypeAliasTemplateDecl(TypeAliasDecl, Decl* parm)
+
+ObjCContainerDecl = ObjCCategory
+                  | ObjCProtocol
+                  | ObjCInterface
+                  | ObjCImpl
+
+ObjCImpl = ObjCCategoryImpl
+         | ObjCImplementation
+
+DeclarationName = DeclarationName(Type?)
+
+Stmt = Expr
+     | NullStmt()
+     | CompoundStmt(Stmt*)
+     | LabelStmt(LabelDeclRef, Stmt)
+     | AttributedStmt(Attr*, Stmt)
+     | IfStmt(VarDecl? var, Expr cond, Stmt then, Stmt? else)
+     | SwitchStmt(VarDecl? var, Expr cond, Stmt body)
+     | WhileStmt(VarDecl? var, Expr cond, Stmt body)
+     | DoStmt(Stmt body, Expr cond)
+     | ForStmt(Stmt? init, VarDecl? condvar, Expr? cond, Expr? inc, Stmt body)
+     | GotoStmt(LabelDeclRef)
+     | IndirectGotoStmt(Expr)
+     | ContinueStmt()
+     | BreakStmt()
+     | ReturnStmt()
+     | ReturnStmt(Expr)
+     | DeclStmt(Decl*)
+     | SwitchCase
+     | AsmStmt
+
+     // Obj-C statements
+     | ObjCAtTryStmt
+     | ObjCAtCatchStmt
+     | ObjCAtFinallyStmt
+     | ObjCAtThrowStmt
+     | ObjCAtSynchronizedStmt
+     | ObjCForCollectionStmt
+     | ObjCAutoreleasePoolStmt
+
+     // C++ statments
+     | CXXCatchStmt(VarDecl?, Stmt)
+     | CXXTryStmt(CompoundStmt, CXXCatchStmt*)
+     | CXXForRangeStmt(VarDecl loopvar, Expr range, Stmt body)
+     | CXXForRangeStmt(DeclStmt range, DeclStmt beginend, Expr cond, Expr inc, DeclStmt loopvar, Stmt body) // Desugared
+
+     // Microsoft Extensions.
+     | SEHTryStmt
+     | SEHExceptStmt
+     | SEHFinallyStmt
+     | MSDependentExistsStmt
+
+SwitchCase = CaseStmt(Expr lhs, Expr rhs, Stmt)
+           | DefaultStmt(Stmt)
+
+AsmStmt = GCCAsmStmt(StringLiteral, StringLiteral* output, StringLiteral* input, StringLiteral* clobber, Expr* output, Expr* input);
+        | MSAsmStmt
+
+Expr = PredefinedExpr()
+     | DeclRefExpr(NestedNameSpecifier?, DeclarationName, TemplateArgument*)
+     | IntegerLiteral()
+     | FloatingLiteral()
+     | ImaginaryLiteral(Expr)
+     | StringLiteral()
+     | CharacterLiteral()
+     | ParenExpr(Expr)
+     | UnaryOperator(Expr)
+     | OffsetOfExpr(Type, Expr)
+     | UnaryExprOrTypeTraitExpr(Type)
+     | UnaryExprOrTypeTraitExpr(Expr)
+     | ArraySubscriptExpr(Expr lhs, Expr rhs)
+     | CallExpr(Expr callee, Expr* arg)
+     | MemberExpr(Expr?, NestedNameSpecifier?, DeclarationName, TemplateArgument*)
+     | CastExpr
+     | BinaryOperator
+     | AbstractConditionalOperator
+     | CompoundLiteralExpr(Decl?, Type, Expr)
+     | ExtVectorElementExpr
+     | InitListExpr(Expr*)
+     | DesignatedInitExpr(Designator*, Expr)
+     | ImplicitValueInitExpr
+     | ParenListExpr(Expr*)
+     | VAArgExpr(Expr, Type)
+     | GenericSelectionExpr(Expr, Type*, Expr*)
+     | PseudoObjectExpr
+     | AtomicExpr(Expr*)
+
+     // GNU Extensions.
+     | AddrLabelExpr(LabelDeclRef)
+     | StmtExpr(CompoundStmt)
+     | ChooseExpr(Expr cond, Expr lhs, Expr rhs)
+     | GNUNullExpr()
+
+     // C++ Expressions.
+     | CXXTypeidExpr
+     | CXXBoolLiteralExpr()
+     | CXXNullPtrLiteralExpr
+     | CXXThisExpr
+     | CXXThrowExpr
+     | CXXDefaultArgExpr
+     | CXXScalarValueInitExpr
+     | CXXNewExpr
+     | CXXDeleteExpr
+     | CXXPseudoDestructorExpr
+     | TypeTraitExpr
+     | UnaryTypeTraitExpr
+     | BinaryTypeTraitExpr
+     | ArrayTypeTraitExpr
+     | ExpressionTraitExpr
+     | DependentScopeDeclRefExpr
+     | CXXConstructExpr
+     | CXXBindTemporaryExpr
+     | ExprWithCleanups
+     | CXXUnresolvedConstructExpr
+     | CXXDependentScopeMemberExpr
+     | OverloadExpr
+     | CXXNoexceptExpr
+     | PackExpansionExpr
+     | SizeOfPackExpr
+     | SubstNonTypeTemplateParmExpr
+     | SubstNonTypeTemplateParmPackExpr
+     | MaterializeTemporaryExpr
+     | LambdaExpr
+
+     // Obj-C Expressions.
+     | ObjCStringLiteral
+     | ObjCBoxedExpr
+     | ObjCArrayLiteral
+     | ObjCDictionaryLiteral
+     | ObjCEncodeExpr
+     | ObjCMessageExpr
+     | ObjCSelectorExpr
+     | ObjCProtocolExpr
+     | ObjCIvarRefExpr
+     | ObjCPropertyRefExpr
+     | ObjCIsaExpr
+     | ObjCIndirectCopyRestoreExpr
+     | ObjCBoolLiteralExpr
+     | ObjCSubscriptRefExpr
+
+     // Clang Extensions.
+     | ShuffleVectorExpr
+     | BlockExpr
+     | OpaqueValueExpr
+
+     // Microsoft Extensions.
+     | CXXUuidofExpr
+
+     // OpenCL Extensions.
+     | AsTypeExpr
+
+BinaryOperator = BinaryOperator(Expr, Expr)
+               | CompoundAssignOperator(Expr, Expr)
+
+AbstractConditionalOperator = ConditionalOperator(Expr cond, Expr lhs, Expr rhs)
+                            | BinaryConditionalOperator(Expr common, Expr cond, Expr lhs, Expr rhs)
+
+CallExpr = CallExpr
+         | CXXOperatorCallExpr
+         | CXXMemberCallExpr
+         | UserDefinedLiteral
+         | CUDAKernelCallExpr
+
+CastExpr = ImplicitCastExpr(Expr)
+         | ExplicitCastExpr
+         | ObjCBridgedCastExpr
+
+ExplicitCastExpr = CStyleCastExpr(Type, Expr)
+                 | CXXNamedCastExpr
+                 | CXXFunctionalCastExpr(Type, Expr)
+
+CXXNamedCastExpr = CXXStaticCastExpr(Type, Expr)
+                 | CXXDynamicCastExpr(Type, Expr)
+                 | CXXReinterpretCastExpr(Type, Expr)
+                 | CXXConstCastExpr(Type, Expr)
+
+CXXConstructExpr = CXXConstructExpr
+                 | CXXTemporaryObjectExpr
+
+OverloadExpr = UnresolvedLookupExpr
+             | UnresolvedMemberExpr
+
+Designator = FieldDeclRef
+           | Expr
+ 
+Type = BuiltinType()
+     | FunctionType
+     | RecordType(Identifier)
+     | ElaboratedType(Type)
+     | lots
+
+FunctionType = FunctionNoProtoType(Type result)
+             | FunctionProtoType(Type result, ParmVarDecl* arg)
+
+TypeLoc = ?
+
+Attr = lots
+
+Notes:
+- The structure defined by this grammar is a superset of legal ASTs.
+- Nodes can have additional properties beyond those listed. Usually only
+the properties that occur elsewhere in the grammar are listed.
+- Many nodes have one or more SourceLocation.
+- Decls have a DeclContext and Attr*.
