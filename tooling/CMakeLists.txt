@@ -23,6 +23,8 @@ set(CLANG_LIBS
   )
 
 set(CLANG_TOOLS
+  ast
+  complex
   clang_check
   rewrite1
   rewrite2

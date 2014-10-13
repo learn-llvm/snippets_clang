@@ -4,6 +4,7 @@ set(LIBCLANG_TOOLS
   ccomplete
   diagnosis
   wrapper
+  voidcaster
   )
 
 list(APPEND FULL_LLVM_LIBS -lclang)
