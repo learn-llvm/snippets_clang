@@ -2,8 +2,8 @@
 
 void test() {
   switch (0) {
-  case 0:
-    [[clang::fallthrough]];
+    case 0:
+      [[clang::fallthrough]];
   }
 };
 

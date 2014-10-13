@@ -8,10 +8,10 @@
 
 namespace {
 
-class PrintGlobalsVisitor : public clang::RecursiveASTVisitor<PrintGlobalsVisitor> {
-public:
-  explicit PrintGlobalsVisitor(clang::ASTContext *Context)
-    : Context(Context) {}
+class PrintGlobalsVisitor
+    : public clang::RecursiveASTVisitor<PrintGlobalsVisitor> {
+ public:
+  explicit PrintGlobalsVisitor(clang::ASTContext *Context) : Context(Context) {}
 
   bool VisitVarDecl(clang::VarDecl *D) {
     const clang::SourceManager &SM = Context->getSourceManager();
@@ -19,42 +19,45 @@ public:
       clang::FullSourceLoc loc = Context->getFullLoc(D->getLocStart());
       if (!SM.isInSystemHeader(loc)) {
         clang::DiagnosticsEngine &D = SM.getDiagnostics();
-        unsigned int id = D.getCustomDiagID(clang::DiagnosticsEngine::Warning, "global variable");
+        unsigned int id = D.getCustomDiagID(clang::DiagnosticsEngine::Warning,
+                                            "global variable");
         D.Report(loc, id);
       }
     }
     return true;
   }
-private:
+
+ private:
   clang::ASTContext *Context;
 };
 
 class PrintGlobalsConsumer : public clang::ASTConsumer {
-public:
+ public:
   explicit PrintGlobalsConsumer(clang::ASTContext *Context)
-    : Visitor(Context) {}
+      : Visitor(Context) {}
 
   virtual void HandleTranslationUnit(clang::ASTContext &Context) {
     Visitor.TraverseDecl(Context.getTranslationUnitDecl());
   }
-private:
+
+ private:
   PrintGlobalsVisitor Visitor;
 };
 
 class PrintGlobalsAction : public clang::PluginASTAction {
-protected:
-  clang::ASTConsumer *CreateASTConsumer(clang::CompilerInstance &CI, llvm::StringRef) {
+ protected:
+  clang::ASTConsumer *CreateASTConsumer(clang::CompilerInstance &CI,
+                                        llvm::StringRef) {
     return new PrintGlobalsConsumer(&CI.getASTContext());
   }
 
   bool ParseArgs(const clang::CompilerInstance &CI,
-                 const std::vector<std::string>& args) {
+                 const std::vector<std::string> &args) {
     // To be written...
     return true;
   }
 };
-
 }
 
-static clang::FrontendPluginRegistry::Add<PrintGlobalsAction>
-X("warn-globals", "generate warnings for non-const global variables");
+static clang::FrontendPluginRegistry::Add<PrintGlobalsAction> X(
+    "warn-globals", "generate warnings for non-const global variables");

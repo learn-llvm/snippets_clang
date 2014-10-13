@@ -1,7 +1,6 @@
 // RUN: ast -f test "%s" 2>&1 | FileCheck %s
 
 class A {
-
   // CHECK: CXXMethodDecl
   // CHECK-NEXT:   DeclarationName test1
   // CHECK-NEXT:   FunctionProtoType
@@ -16,9 +15,7 @@ class A {
   // CHECK-NEXT:       DeclarationName a
   // CHECK-NEXT:       BuiltinType int
   // CHECK-NEXT:   CompoundStmt
-  void test2(int a) {
-  }
-
+  void test2(int a) {}
 };
 
 // CHECK: CXXMethodDecl
@@ -28,5 +25,4 @@ class A {
 // CHECK-NEXT:   FunctionProtoType
 // CHECK-NEXT:     BuiltinType void
 // CHECK-NEXT:   CompoundStmt
-void A::test1() {
-}
+void A::test1() {}

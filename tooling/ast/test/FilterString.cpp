@@ -3,18 +3,13 @@
 namespace test_namespace {
 
 class TheClass {
-public:
+ public:
   int theMethod(int x);
 };
 
-int TheClass::theMethod(int x) {
-  return x + x;
-}
+int TheClass::theMethod(int x) { return x + x; }
 
-int theFunction(int x) {
-  return x + x;
-}
-
+int theFunction(int x) { return x + x; }
 }
 
 // CHECK: CXXRecordDecl class

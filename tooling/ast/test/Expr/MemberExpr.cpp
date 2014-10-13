@@ -3,8 +3,10 @@
 struct A {
   int i1;
   static int i2;
-  template <typename T> void f1();
-  template <typename T> static void f2();
+  template <typename T>
+  void f1();
+  template <typename T>
+  static void f2();
 
   // CHECK:   CompoundStmt
   void test1() {

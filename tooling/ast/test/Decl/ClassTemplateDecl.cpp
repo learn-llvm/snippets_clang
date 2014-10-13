@@ -5,6 +5,7 @@
 // CHECK-NEXT:     DeclarationName test1
 // CHECK-NEXT:   TemplateTypeParmDecl
 // CHECK-NEXT:     DeclarationName T
-template<class T> class test1;
+template <class T>
+class test1;
 
 // TODO: implicit instantiations

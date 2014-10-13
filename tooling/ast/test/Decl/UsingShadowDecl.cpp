@@ -1,9 +1,9 @@
 // RUN: ast -i -f test "%s" 2>&1 | FileCheck %s
 
 namespace A {
-  int i;
-  void foo(int);
-  void foo(bool);
+int i;
+void foo(int);
+void foo(bool);
 };
 
 // CHECK: NamespaceDecl
@@ -14,7 +14,7 @@ namespace A {
 // CHECK-NEXT:   UsingShadowDecl
 // CHECK-NEXT:     VarDeclRef i
 namespace test1 {
-  using A::i;
+using A::i;
 };
 
 // CHECK-NEXT: NamespaceDecl
@@ -27,5 +27,5 @@ namespace test1 {
 // CHECK-NEXT:   UsingShadowDecl
 // CHECK-NEXT:     FunctionDeclRef foo
 namespace test2 {
-  using A::foo;
+using A::foo;
 };

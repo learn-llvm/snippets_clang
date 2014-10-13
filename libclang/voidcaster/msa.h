@@ -15,16 +15,15 @@
 #include <stdlib.h>
 
 /** The Magical String Array structure. */
-typedef struct
-{
-	/** How many items can the array house? */
-	size_t capacity;
+typedef struct {
+  /** How many items can the array house? */
+  size_t capacity;
 
-	/** How many items is the array housing right now? */
-	size_t count;
+  /** How many items is the array housing right now? */
+  size_t count;
 
-	/** The string array itself. */
-	char **arr;
+  /** The string array itself. */
+  char **arr;
 } msa_t;
 
 /**

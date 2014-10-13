@@ -42,30 +42,26 @@ static cl::extrahelp MoreHelp(
 
 static cl::OptionCategory ClangCheckCategory("clang-check options");
 static std::unique_ptr<opt::OptTable> Options(createDriverOptTable());
-static cl::opt<bool>
-    ASTDump("ast-dump",
-            cl::desc(Options->getOptionHelpText(options::OPT_ast_dump)),
-            cl::cat(ClangCheckCategory));
-static cl::opt<bool>
-    ASTList("ast-list",
-            cl::desc(Options->getOptionHelpText(options::OPT_ast_list)),
-            cl::cat(ClangCheckCategory));
-static cl::opt<bool>
-    ASTPrint("ast-print",
-             cl::desc(Options->getOptionHelpText(options::OPT_ast_print)),
-             cl::cat(ClangCheckCategory));
+static cl::opt<bool> ASTDump(
+    "ast-dump", cl::desc(Options->getOptionHelpText(options::OPT_ast_dump)),
+    cl::cat(ClangCheckCategory));
+static cl::opt<bool> ASTList(
+    "ast-list", cl::desc(Options->getOptionHelpText(options::OPT_ast_list)),
+    cl::cat(ClangCheckCategory));
+static cl::opt<bool> ASTPrint(
+    "ast-print", cl::desc(Options->getOptionHelpText(options::OPT_ast_print)),
+    cl::cat(ClangCheckCategory));
 static cl::opt<std::string> ASTDumpFilter(
     "ast-dump-filter",
     cl::desc(Options->getOptionHelpText(options::OPT_ast_dump_filter)),
     cl::cat(ClangCheckCategory));
-static cl::opt<bool>
-    Analyze("analyze",
-            cl::desc(Options->getOptionHelpText(options::OPT_analyze)),
-            cl::cat(ClangCheckCategory));
+static cl::opt<bool> Analyze(
+    "analyze", cl::desc(Options->getOptionHelpText(options::OPT_analyze)),
+    cl::cat(ClangCheckCategory));
 
-static cl::opt<bool>
-    Fixit("fixit", cl::desc(Options->getOptionHelpText(options::OPT_fixit)),
-          cl::cat(ClangCheckCategory));
+static cl::opt<bool> Fixit(
+    "fixit", cl::desc(Options->getOptionHelpText(options::OPT_fixit)),
+    cl::cat(ClangCheckCategory));
 static cl::opt<bool> FixWhatYouCan(
     "fix-what-you-can",
     cl::desc(Options->getOptionHelpText(options::OPT_fix_what_you_can)),
@@ -85,7 +81,7 @@ namespace {
 // FIXME: Move FixItRewriteInPlace from lib/Rewrite/Frontend/FrontendActions.cpp
 // into a header file and reuse that.
 class FixItOptions : public clang::FixItOptions {
-public:
+ public:
   FixItOptions() { FixWhatYouCan = ::FixWhatYouCan; }
 
   std::string RewriteFilename(const std::string &filename, int &fd) override {
@@ -95,7 +91,7 @@ public:
     // We don't need to do permission checking here since clang will diagnose
     // any I/O errors itself.
 
-    fd = -1; // No file descriptor for file.
+    fd = -1;  // No file descriptor for file.
 
     return filename;
   }
@@ -107,7 +103,7 @@ public:
 /// This has the side-effect that clang-check -fixit exits with code 0 on
 /// successfully fixing all errors.
 class FixItRewriter : public clang::FixItRewriter {
-public:
+ public:
   FixItRewriter(clang::DiagnosticsEngine &Diags,
                 clang::SourceManager &SourceMgr,
                 const clang::LangOptions &LangOpts,
@@ -120,7 +116,7 @@ public:
 /// \brief Subclasses \c clang::FixItAction so that we can install the custom
 /// \c FixItRewriter.
 class FixItAction : public clang::FixItAction {
-public:
+ public:
   bool BeginSourceFileAction(clang::CompilerInstance &CI,
                              StringRef Filename) override {
     FixItOpts.reset(new FixItOptions);
@@ -131,7 +127,7 @@ public:
 };
 
 class InsertAdjuster : public clang::tooling::ArgumentsAdjuster {
-public:
+ public:
   enum Position { BEGIN, END };
 
   InsertAdjuster(const CommandLineArguments &Extra, Position Pos)
@@ -140,8 +136,8 @@ public:
   InsertAdjuster(const char *Extra, Position Pos)
       : Extra(1, std::string(Extra)), Pos(Pos) {}
 
-  virtual CommandLineArguments
-  Adjust(const CommandLineArguments &Args) override {
+  virtual CommandLineArguments Adjust(
+      const CommandLineArguments &Args) override {
     CommandLineArguments Return(Args);
 
     CommandLineArguments::iterator I;
@@ -149,33 +145,31 @@ public:
       I = Return.end();
     } else {
       I = Return.begin();
-      ++I; // To leave the program name in place
+      ++I;  // To leave the program name in place
     }
 
     Return.insert(I, Extra.begin(), Extra.end());
     return Return;
   }
 
-private:
+ private:
   const CommandLineArguments Extra;
   const Position Pos;
 };
 
-} // namespace
+}  // namespace
 
 // Anonymous namespace here causes problems with gcc <= 4.4 on MacOS 10.6.
 // "Non-global symbol: ... can't be a weak_definition"
 namespace clang_check {
 class ClangCheckActionFactory {
-public:
+ public:
   std::unique_ptr<clang::ASTConsumer> newASTConsumer() {
-    if (ASTList)
-      return clang::CreateASTDeclNodeLister();
+    if (ASTList) return clang::CreateASTDeclNodeLister();
     if (ASTDump)
       return clang::CreateASTDumper(ASTDumpFilter, /*DumpDecls*/ true,
                                     /*DumpLookups*/ false);
-    if (ASTPrint)
-      return clang::CreateASTPrinter(&llvm::outs(), ASTDumpFilter);
+    if (ASTPrint) return clang::CreateASTPrinter(&llvm::outs(), ASTDumpFilter);
     return llvm::make_unique<clang::ASTConsumer>();
   }
 };

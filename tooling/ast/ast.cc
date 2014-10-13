@@ -23,33 +23,30 @@ using namespace clang::tooling;
 ///
 /// The supplied string is used as a regex to match the name of NamedDecls,
 /// and only matching nodes are passed on to the wrapped visitor.
-template<typename T>
+template <typename T>
 class ASTFilter : public RecursiveASTVisitor<ASTFilter<T> > {
-public:
+ public:
   typedef RecursiveASTVisitor<ASTFilter> RAV;
 
   ASTFilter(T &Visitor, StringRef FilterString)
-    : Visitor(Visitor), Filter(NULL) {
-      if (!FilterString.empty()) {
-        std::string Error;
-        Filter = new llvm::Regex(FilterString);
-        if (!Filter->isValid(Error))
-          llvm::report_fatal_error("malformed filter expression: "
-              + FilterString + ": " + Error);
-      }
+      : Visitor(Visitor), Filter(NULL) {
+    if (!FilterString.empty()) {
+      std::string Error;
+      Filter = new llvm::Regex(FilterString);
+      if (!Filter->isValid(Error))
+        llvm::report_fatal_error("malformed filter expression: " +
+                                 FilterString + ": " + Error);
     }
-
-  ~ASTFilter() {
-    delete Filter;
   }
 
+  ~ASTFilter() { delete Filter; }
+
   bool TraverseDecl(Decl *D) {
-    if (!Filter || Filter->match(getName(D)))
-      return Visitor.TraverseDecl(D);
+    if (!Filter || Filter->match(getName(D))) return Visitor.TraverseDecl(D);
     return RAV::TraverseDecl(D);
   }
 
-private:
+ private:
   std::string getName(Decl *D) {
     if (isa<NamedDecl>(D))
       return cast<NamedDecl>(D)->getQualifiedNameAsString();
@@ -62,7 +59,7 @@ private:
 
 /// \brief Options for ASTPrinter that are set by the user.
 class ASTPrinterOptions {
-public:
+ public:
   ASTPrinterOptions() {}
 
   bool EnableLoc;
@@ -72,7 +69,7 @@ public:
 
 /// \brief An AST consumer that uses RAV to traverse the AST and print it.
 class ASTPrinter : public ASTConsumer, public RecursiveASTVisitor<ASTPrinter> {
-public:
+ public:
   typedef RecursiveASTVisitor<ASTPrinter> RAV;
 
   explicit ASTPrinter(raw_ostream &OS, const ASTPrinterOptions &Options);
@@ -98,9 +95,11 @@ public:
   bool VisitEnumDecl(EnumDecl *D);
   bool VisitRecordDecl(RecordDecl *D);
   bool VisitCXXRecordDecl(CXXRecordDecl *D);
-  bool TraverseClassTemplateSpecializationDecl(ClassTemplateSpecializationDecl *D);
+  bool TraverseClassTemplateSpecializationDecl(
+      ClassTemplateSpecializationDecl *D);
   bool VisitClassTemplateSpecializationDecl(ClassTemplateSpecializationDecl *D);
-  bool VisitClassTemplatePartialSpecializationDecl(ClassTemplatePartialSpecializationDecl *D);
+  bool VisitClassTemplatePartialSpecializationDecl(
+      ClassTemplatePartialSpecializationDecl *D);
   bool VisitTemplateTypeParmDecl(TemplateTypeParmDecl *D);
   // ValueDecl empty
   bool VisitEnumConstantDecl(EnumConstantDecl *D);
@@ -337,7 +336,7 @@ public:
   bool TraverseTemplateArgumentLoc(const TemplateArgumentLoc &ArgLoc);
   bool TraverseConstructorInitializer(CXXCtorInitializer *Init);
 
-private:
+ private:
   void setSourceRange(SourceRange R);
   void printLocation(SourceLocation Loc, bool PrintLine);
   void printNewline();
@@ -378,10 +377,14 @@ private:
 };
 
 ASTPrinter::ASTPrinter(raw_ostream &OS, const ASTPrinterOptions &Options)
-  : Filter(*this, Options.FilterString), Context(NULL), OS(OS),
-    Indent(0), NeedNewline(false),
-    LastLocFilename(""), LastLocLine(~0U), Options(Options)
-{}
+    : Filter(*this, Options.FilterString),
+      Context(NULL),
+      OS(OS),
+      Indent(0),
+      NeedNewline(false),
+      LastLocFilename(""),
+      LastLocLine(~0U),
+      Options(Options) {}
 
 void ASTPrinter::HandleTranslationUnit(ASTContext &Context) {
   this->Context = &Context;
@@ -421,8 +424,7 @@ bool ASTPrinter::VisitDecl(Decl *D) {
 }
 
 bool ASTPrinter::VisitNamedDecl(NamedDecl *D) {
-  if (D->isModulePrivate())
-    OS << " __module_private__";
+  if (D->isModulePrivate()) OS << " __module_private__";
 
   // TODO: getDeclName() in all children
   // - can't here because some already traverse it
@@ -467,9 +469,7 @@ bool ASTPrinter::VisitLabelDecl(LabelDecl *D) {
   return true;
 }
 
-bool ASTPrinter::VisitTypeDecl(TypeDecl *D) {
-  return true;
-}
+bool ASTPrinter::VisitTypeDecl(TypeDecl *D) { return true; }
 
 bool ASTPrinter::VisitTypedefNameDecl(TypedefNameDecl *D) {
   // TODO: VisitRedeclarable()
@@ -479,7 +479,8 @@ bool ASTPrinter::VisitTypedefNameDecl(TypedefNameDecl *D) {
   return true;
 }
 
-bool ASTPrinter::VisitUnresolvedUsingTypenameDecl(UnresolvedUsingTypenameDecl *D) {
+bool ASTPrinter::VisitUnresolvedUsingTypenameDecl(
+    UnresolvedUsingTypenameDecl *D) {
   // FIXME: move into RAV?
   TraverseDeclarationNameInfo(
       DeclarationNameInfo(D->getDeclName(), D->getLocation()));
@@ -515,17 +516,17 @@ bool ASTPrinter::VisitEnumDecl(EnumDecl *D) {
 
 bool ASTPrinter::VisitRecordDecl(RecordDecl *D) {
   switch (D->getTagKind()) {
-  default:
-    llvm_unreachable("unknown TagKind");
-  case TTK_Struct:
-    OS << " struct";
-    break;
-  case TTK_Union:
-    OS << " union";
-    break;
-  case TTK_Class:
-    OS << " class";
-    break;
+    default:
+      llvm_unreachable("unknown TagKind");
+    case TTK_Struct:
+      OS << " struct";
+      break;
+    case TTK_Union:
+      OS << " union";
+      break;
+    case TTK_Class:
+      OS << " class";
+      break;
   }
 
   // TODO: hasFlexibleArrayMember()
@@ -556,15 +557,16 @@ bool ASTPrinter::VisitCXXRecordDecl(CXXRecordDecl *D) {
   return true;
 }
 
-bool ASTPrinter::TraverseClassTemplateSpecializationDecl(ClassTemplateSpecializationDecl *D) {
+bool ASTPrinter::TraverseClassTemplateSpecializationDecl(
+    ClassTemplateSpecializationDecl *D) {
   RAV::TraverseClassTemplateSpecializationDecl(D);
 
   // FIXME: move into RAV
   // RAV::TraverseCXXRecordHelper(D);
   if (D->isCompleteDefinition()) {
     for (CXXRecordDecl::base_class_iterator I = D->bases_begin(),
-        E = D->bases_end();
-        I != E; ++I) {
+                                            E = D->bases_end();
+         I != E; ++I) {
       TraverseTypeLoc(I->getTypeSourceInfo()->getTypeLoc());
     }
   }
@@ -572,14 +574,16 @@ bool ASTPrinter::TraverseClassTemplateSpecializationDecl(ClassTemplateSpecializa
   return true;
 }
 
-bool ASTPrinter::VisitClassTemplateSpecializationDecl(ClassTemplateSpecializationDecl *D) {
+bool ASTPrinter::VisitClassTemplateSpecializationDecl(
+    ClassTemplateSpecializationDecl *D) {
   // TODO: getSpecializedTemplateOrPartial()
   // TODO: getTemplateInstantiationArgs()
   // TODO: getSpecializationKind()
   return true;
 }
 
-bool ASTPrinter::VisitClassTemplatePartialSpecializationDecl(ClassTemplatePartialSpecializationDecl *D) {
+bool ASTPrinter::VisitClassTemplatePartialSpecializationDecl(
+    ClassTemplatePartialSpecializationDecl *D) {
   // FIXME: RAV should do this instead of getTemplateParameters()
   // TraverseTypeLoc(D->getTypeAsWritten()->getTypeLoc());
   return true;
@@ -608,9 +612,9 @@ bool ASTPrinter::VisitEnumConstantDecl(EnumConstantDecl *D) {
 bool ASTPrinter::TraverseIndirectFieldDecl(IndirectFieldDecl *D) {
   RAV::TraverseIndirectFieldDecl(D);
 
-  for (IndirectFieldDecl::chain_iterator
-       I = D->chain_begin(),
-       E = D->chain_end(); I != E; ++I)
+  for (IndirectFieldDecl::chain_iterator I = D->chain_begin(),
+                                         E = D->chain_end();
+       I != E; ++I)
     printDeclRef(*I, SourceLocation());
 
   return true;
@@ -620,13 +624,10 @@ bool ASTPrinter::VisitFunctionDecl(FunctionDecl *D) {
   // TODO: VisitRedeclarable()
   // TODO: getStorageClass()
   StorageClass SC = D->getStorageClass();
-  if (SC != SC_None)
-    OS << ' ' << VarDecl::getStorageClassSpecifierString(SC);
+  if (SC != SC_None) OS << ' ' << VarDecl::getStorageClassSpecifierString(SC);
   // TODO: IsInline
-  if (D->isInlineSpecified())
-    OS << " inline";
-  if (D->isVirtualAsWritten())
-    OS << " virtual";
+  if (D->isInlineSpecified()) OS << " inline";
+  if (D->isVirtualAsWritten()) OS << " virtual";
   // TODO: isPure()
   // TODO: hasInheritedPrototype()
   // TODO: hasWrittenPrototype()
@@ -639,20 +640,20 @@ bool ASTPrinter::VisitFunctionDecl(FunctionDecl *D) {
   // TODO: getTemplateKind()
 
   switch (D->getTemplatedKind()) {
-  case FunctionDecl::TK_NonTemplate:
-    break;
-  case FunctionDecl::TK_FunctionTemplate:
-    // TODO: getDescribedFunctionTemplate()
-    break;
-  case FunctionDecl::TK_MemberSpecialization:
-    // TODO: getMemberSpecializationInfo()
-    break;
-  case FunctionDecl::TK_FunctionTemplateSpecialization:
-    // TODO: getTemplateSpecializationInfo()
-    break;
-  case FunctionDecl::TK_DependentFunctionTemplateSpecialization:
-    // TODO: getDependentSpecializationInfo()
-    break;
+    case FunctionDecl::TK_NonTemplate:
+      break;
+    case FunctionDecl::TK_FunctionTemplate:
+      // TODO: getDescribedFunctionTemplate()
+      break;
+    case FunctionDecl::TK_MemberSpecialization:
+      // TODO: getMemberSpecializationInfo()
+      break;
+    case FunctionDecl::TK_FunctionTemplateSpecialization:
+      // TODO: getTemplateSpecializationInfo()
+      break;
+    case FunctionDecl::TK_DependentFunctionTemplateSpecialization:
+      // TODO: getDependentSpecializationInfo()
+      break;
   }
 
   return true;
@@ -696,8 +697,7 @@ bool ASTPrinter::VisitVarDecl(VarDecl *D) {
   // TODO: VisitRedeclarable()
   // TODO: getStorageClass()
   StorageClass SC = D->getStorageClass();
-  if (SC != SC_None)
-    OS << ' ' << VarDecl::getStorageClassSpecifierString(SC);
+  if (SC != SC_None) OS << ' ' << VarDecl::getStorageClassSpecifierString(SC);
   /// if (D->isThreadSpecified())
   ///   OS << " __thread";
   // TODO: getInitStyle()
@@ -773,18 +773,29 @@ bool ASTPrinter::VisitUsingShadowDecl(UsingShadowDecl *D) {
 
 bool ASTPrinter::VisitLinkageSpecDecl(LinkageSpecDecl *D) {
   switch (D->getLanguage()) {
-  case LinkageSpecDecl::lang_c: OS << " C"; break;
-  case LinkageSpecDecl::lang_cxx: OS << " C++"; break;
+    case LinkageSpecDecl::lang_c:
+      OS << " C";
+      break;
+    case LinkageSpecDecl::lang_cxx:
+      OS << " C++";
+      break;
   }
   return true;
 }
 
 bool ASTPrinter::VisitAccessSpecDecl(AccessSpecDecl *D) {
   switch (D->getAccess()) {
-  case AS_public: OS << " public"; break;
-  case AS_protected: OS << " protected"; break;
-  case AS_private: OS << " private"; break;
-  case AS_none: llvm_unreachable("invalid AccessSpecifier");
+    case AS_public:
+      OS << " public";
+      break;
+    case AS_protected:
+      OS << " protected";
+      break;
+    case AS_private:
+      OS << " private";
+      break;
+    case AS_none:
+      llvm_unreachable("invalid AccessSpecifier");
   }
   return true;
 }
@@ -860,20 +871,20 @@ bool ASTPrinter::VisitExpr(Expr *E) {
 
 bool ASTPrinter::VisitPredefinedExpr(PredefinedExpr *E) {
   switch (E->getIdentType()) {
-  default:
-    llvm_unreachable("unknown IdentType");
-  case PredefinedExpr::Func:
-    OS << " __func__";
-    break;
-  case PredefinedExpr::Function:
-    OS << " __FUNCTION__";
-    break;
-  case PredefinedExpr::LFunction:
-    OS << " L__FUNCTION__";
-    break;
-  case PredefinedExpr::PrettyFunction:
-    OS << " __PRETTY_FUNCTION__";
-    break;
+    default:
+      llvm_unreachable("unknown IdentType");
+    case PredefinedExpr::Func:
+      OS << " __func__";
+      break;
+    case PredefinedExpr::Function:
+      OS << " __FUNCTION__";
+      break;
+    case PredefinedExpr::LFunction:
+      OS << " L__FUNCTION__";
+      break;
+    case PredefinedExpr::PrettyFunction:
+      OS << " __PRETTY_FUNCTION__";
+      break;
   }
   return true;
 }
@@ -913,10 +924,8 @@ bool ASTPrinter::VisitCharacterLiteral(CharacterLiteral *E) {
 }
 
 bool ASTPrinter::VisitUnaryOperator(UnaryOperator *E) {
-  if (E->isPostfix())
-    OS << ' ' << "postfix";
-  if (E->isPrefix())
-    OS << ' ' << "prefix";
+  if (E->isPostfix()) OS << ' ' << "postfix";
+  if (E->isPrefix()) OS << ' ' << "prefix";
   OS << ' ' << UnaryOperator::getOpcodeStr(E->getOpcode());
   return true;
 }
@@ -986,7 +995,7 @@ bool ASTPrinter::VisitDesignatedInitExpr(DesignatedInitExpr *E) {
 
   // FIXME: move into RAV?
   for (DesignatedInitExpr::designators_iterator D = E->designators_begin(),
-                                             DEnd = E->designators_end();
+                                                DEnd = E->designators_end();
        D != DEnd; ++D) {
     if (D->isFieldDesignator()) {
       if (FieldDecl *Field = D->getField()) {
@@ -1007,8 +1016,8 @@ bool ASTPrinter::VisitAtomicExpr(AtomicExpr *E) {
   switch (E->getOp()) {
 #define BUILTIN(ID, TYPE, ATTRS)
 #define ATOMIC_BUILTIN(ID, TYPE, ATTRS) \
-  case AtomicExpr::AO ## ID: \
-    OS << #ID; \
+  case AtomicExpr::AO##ID:              \
+    OS << #ID;                          \
     break;
 #include <clang/Basic/Builtins.def>
   }
@@ -1022,17 +1031,17 @@ bool ASTPrinter::VisitAddrLabelExpr(AddrLabelExpr *E) {
 
 bool ASTPrinter::VisitUnaryExprOrTypeTraitExpr(UnaryExprOrTypeTraitExpr *E) {
   switch (E->getKind()) {
-  default:
-    llvm_unreachable("unknown IdentType");
-  case UETT_SizeOf:
-    OS << " sizeof";
-    break;
-  case UETT_AlignOf:
-    OS << " alignof";
-    break;
-  case UETT_VecStep:
-    OS << " vec_step";
-    break;
+    default:
+      llvm_unreachable("unknown IdentType");
+    case UETT_SizeOf:
+      OS << " sizeof";
+      break;
+    case UETT_AlignOf:
+      OS << " alignof";
+      break;
+    case UETT_VecStep:
+      OS << " vec_step";
+      break;
   }
   return true;
 }
@@ -1090,8 +1099,7 @@ bool ASTPrinter::TraverseSubstTemplateTypeParmTypeLoc(
 }
 
 bool ASTPrinter::TraverseNestedNameSpecifier(NestedNameSpecifier *NNS) {
-  if (!NNS)
-    return true;
+  if (!NNS) return true;
 
   ++Indent;
   printIndent();
@@ -1104,8 +1112,7 @@ bool ASTPrinter::TraverseNestedNameSpecifier(NestedNameSpecifier *NNS) {
 }
 
 bool ASTPrinter::TraverseNestedNameSpecifierLoc(NestedNameSpecifierLoc NNS) {
-  if (!NNS)
-    return true;
+  if (!NNS) return true;
 
   ++Indent;
   printIndent();
@@ -1149,7 +1156,7 @@ bool ASTPrinter::TraverseDeclarationNameInfo(DeclarationNameInfo NameInfo) {
   }
 #endif
   setSourceRange(NameInfo.getSourceRange());
-  OS << ' '<<NameInfo.getName().getAsString()<<'\n';
+  OS << ' ' << NameInfo.getName().getAsString() << '\n';
   bool Result = RAV::TraverseDeclarationNameInfo(NameInfo);
   --Indent;
   return Result;
@@ -1164,7 +1171,8 @@ bool ASTPrinter::TraverseTemplateArgument(const TemplateArgument &Arg) {
   return Result;
 }
 
-bool ASTPrinter::TraverseTemplateArgumentLoc(const TemplateArgumentLoc &ArgLoc) {
+bool ASTPrinter::TraverseTemplateArgumentLoc(
+    const TemplateArgumentLoc &ArgLoc) {
   ++Indent;
   printIndent();
   OS << "TemplateArgument";
@@ -1176,8 +1184,7 @@ bool ASTPrinter::TraverseTemplateArgumentLoc(const TemplateArgumentLoc &ArgLoc) 
 
 bool ASTPrinter::TraverseConstructorInitializer(CXXCtorInitializer *Init) {
   // FIXME: move into RAV?
-  if (!Init->isWritten() && !shouldVisitImplicitCode())
-    return true;
+  if (!Init->isWritten() && !shouldVisitImplicitCode()) return true;
 
   ++Indent;
   printIndent();
@@ -1194,8 +1201,7 @@ bool ASTPrinter::TraverseConstructorInitializer(CXXCtorInitializer *Init) {
 
 /// \brief Stores a source range for printing at the end of the current line.
 void ASTPrinter::setSourceRange(SourceRange R) {
-  if (!Options.EnableLoc)
-    return;
+  if (!Options.EnableLoc) return;
   NeedLoc = R;
 }
 
@@ -1211,8 +1217,7 @@ void ASTPrinter::printLocation(SourceLocation Loc, bool PrintLine) {
   // Based on StmtDumper::DumpLocation
   SourceLocation SpellingLoc = Context->getSourceManager().getSpellingLoc(Loc);
   PresumedLoc PLoc = Context->getSourceManager().getPresumedLoc(SpellingLoc);
-  if (!PLoc.isValid())
-    return;
+  if (!PLoc.isValid()) return;
 
   const char *Filename = PLoc.getFilename();
   unsigned Line = PLoc.getLine();
@@ -1251,8 +1256,7 @@ void ASTPrinter::printNewline() {
 /// Also finishes printing the previous line if needed.
 void ASTPrinter::printIndent() {
   printNewline();
-  for (unsigned i = 1; i < Indent; ++i)
-    OS << "  ";
+  for (unsigned i = 1; i < Indent; ++i) OS << "  ";
   NeedNewline = true;
 }
 
@@ -1274,15 +1278,15 @@ void ASTPrinter::printIdentifier(NamedDecl *D) {
 }
 
 class ASTPrinterAction : public ASTFrontendAction {
-public:
+ public:
   ASTPrinterAction(const ASTPrinterOptions &Options) : Options(Options) {}
 
-  virtual std::unique_ptr<ASTConsumer> CreateASTConsumer(
-      CompilerInstance &CI, StringRef InFile) {
+  virtual std::unique_ptr<ASTConsumer> CreateASTConsumer(CompilerInstance &CI,
+                                                         StringRef InFile) {
     return std::make_unique<ASTPrinter>(llvm::outs(), Options);
   }
 
-private:
+ private:
   const ASTPrinterOptions &Options;
 };
 
@@ -1290,31 +1294,24 @@ static bool runTool(cl::list<std::string> Argv, FrontendAction *ToolAction) {
   std::vector<std::string> CommandLine;
   CommandLine.push_back("clang-tool");
   CommandLine.push_back("-fsyntax-only");
-  for (unsigned i = 0; i < Argv.size(); ++i)
-    CommandLine.push_back(Argv[i]);
+  for (unsigned i = 0; i < Argv.size(); ++i) CommandLine.push_back(Argv[i]);
   FileManager Files((FileSystemOptions()));
   ToolInvocation Invocation(CommandLine, ToolAction, &Files);
   return Invocation.run();
 }
 
-static cl::opt<bool> EnableLoc(
-    "l",
-    cl::desc("Enable source locations"),
-    cl::Optional);
+static cl::opt<bool> EnableLoc("l", cl::desc("Enable source locations"),
+                               cl::Optional);
 
-static cl::opt<bool> EnableImplicit(
-    "i",
-    cl::desc("Enable implicit code"),
-    cl::Optional);
+static cl::opt<bool> EnableImplicit("i", cl::desc("Enable implicit code"),
+                                    cl::Optional);
 
-static cl::opt<std::string> FilterString(
-    "f",
-    cl::desc("Filter named declarations"),
-    cl::Optional);
+static cl::opt<std::string> FilterString("f",
+                                         cl::desc("Filter named declarations"),
+                                         cl::Optional);
 
-static cl::list<std::string> Argv(
-    cl::Positional,
-    cl::desc("Compiler arguments"));
+static cl::list<std::string> Argv(cl::Positional,
+                                  cl::desc("Compiler arguments"));
 
 int main(int argc, const char *argv[]) {
 #if 0
@@ -1322,7 +1319,7 @@ int main(int argc, const char *argv[]) {
   Tool.initialize(argc, argv);
   return Tool.run(newFrontendActionFactory<ASTPrinterAction>());
 #else
-  //runToolOnCode(new ASTPrinterAction, argv[1]);
+  // runToolOnCode(new ASTPrinterAction, argv[1]);
   cl::ParseCommandLineOptions(argc, argv);
   ASTPrinterOptions Options;
   Options.EnableLoc = EnableLoc;

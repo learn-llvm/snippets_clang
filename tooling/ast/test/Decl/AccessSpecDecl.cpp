@@ -6,7 +6,7 @@
 // CHECK-NEXT:   AccessSpecDecl protected
 // CHECK-NEXT:   AccessSpecDecl private
 class test1 {
-public:
-protected:
-private:
+ public:
+ protected:
+ private:
 };

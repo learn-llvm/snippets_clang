@@ -1,7 +1,6 @@
 // RUN: ast -f test -- "%s" 2>&1 | FileCheck %s
 
-class A {
-};
+class A {};
 
 // CHECK: ClassTemplateDecl
 // CHECK-NEXT:   CXXRecordDecl class
@@ -10,7 +9,8 @@ class A {
 // CHECK-NEXT:     DeclarationName T1
 // CHECK-NEXT:   TemplateTypeParmDecl
 // CHECK-NEXT:     DeclarationName T2
-template<typename T1, typename T2> class test1;
+template <typename T1, typename T2>
+class test1;
 
 // CHECK-NEXT: ClassTemplatePartialSpecializationDecl class
 // CHECK-NEXT:   DeclarationName test1
@@ -20,7 +20,8 @@ template<typename T1, typename T2> class test1;
 // CHECK-NEXT:     TemplateTypeParmType
 // CHECK-NEXT:   TemplateArgument
 // CHECK-NEXT:     BuiltinType bool
-template<typename T1> class test1<T1, bool>;
+template <typename T1>
+class test1<T1, bool>;
 
 // CHECK: ClassTemplateDecl
 // CHECK-NEXT:   CXXRecordDecl class
@@ -29,7 +30,8 @@ template<typename T1> class test1<T1, bool>;
 // CHECK-NEXT:     DeclarationName T1
 // CHECK-NEXT:   TemplateTypeParmDecl
 // CHECK-NEXT:     DeclarationName T2
-template<typename T1, typename T2> class test2;
+template <typename T1, typename T2>
+class test2;
 
 // CHECK-NEXT: ClassTemplatePartialSpecializationDecl class
 // CHECK-NEXT:   DeclarationName test2
@@ -43,7 +45,8 @@ template<typename T1, typename T2> class test2;
 // CHECK-NEXT:   FieldDecl
 // CHECK-NEXT:     DeclarationName i
 // CHECK-NEXT:     BuiltinType int
-template<typename T1> class test2<T1, bool> : A {
+template <typename T1>
+class test2<T1, bool> : A {
   int i;
 };
 

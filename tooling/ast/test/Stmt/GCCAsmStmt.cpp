@@ -18,7 +18,7 @@ void test() {
   // CHECK-NEXT:     GCCAsmStmt
   // CHECK-NEXT:       StringLiteral "movl 1, %%eax;"
   // CHECK-NEXT:       StringLiteral "%eax"
-  asm("movl 1, %%eax;":::"%eax");
+  asm("movl 1, %%eax;" ::: "%eax");
 
   // CHECK-NEXT:     GCCAsmStmt
   // CHECK-NEXT:       StringLiteral "movl %1, %%eax;movl %%eax, %0;"
@@ -32,9 +32,7 @@ void test() {
   // CHECK-NEXT:           DeclarationName a
   asm("movl %1, %%eax;"
       "movl %%eax, %0;"
-      :"=r"(b)
-      :"r"(a)
-      :"%eax"
-     );
+      : "=r"(b)
+      : "r"(a)
+      : "%eax");
 };
-

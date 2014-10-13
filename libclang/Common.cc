@@ -84,13 +84,12 @@ auto getFnQualifiers(CXTranslationUnit translationUnit, CXCursor cursor) {
 }
 
 void dumpTokenInRange(const CXTranslationUnit &tu, CXSourceRange range) {
-
   typedef std::map<CXTokenKind, std::string> TokKind2StrMap;
 #define TokPair(name) \
   { CXToken_##name, #name }
 
   static TokKind2StrMap tokenMap{TokPair(Punctuation), TokPair(Keyword),
-                                 TokPair(Identifier),  TokPair(Literal),
+                                 TokPair(Identifier), TokPair(Literal),
                                  TokPair(Comment)};
 #undef TokPair
 

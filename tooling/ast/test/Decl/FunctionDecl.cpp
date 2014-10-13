@@ -14,15 +14,14 @@ void test1(int a);
 // CHECK-NEXT:   FunctionProtoType
 // CHECK-NEXT:     BuiltinType void
 // CHECK-NEXT:   CompoundStmt
-void test2(void) {
-}
+void test2(void) {}
 
 // CHECK: FunctionDecl
 // CHECK-NEXT:   DeclarationName test3
 // CHECK-NEXT:   FunctionProtoType
 // CHECK-NEXT:     BuiltinType void
 namespace A {
-  void test3();
+void test3();
 };
 
 // CHECK: FunctionDecl
@@ -31,5 +30,4 @@ namespace A {
 // CHECK-NEXT:   FunctionProtoType
 // CHECK-NEXT:     BuiltinType void
 // CHECK-NEXT:   CompoundStmt
-void A::test3() {
-}
+void A::test3() {}

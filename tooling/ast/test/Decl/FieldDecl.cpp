@@ -30,8 +30,8 @@
 struct test {
   bool b1;
   bool b2 = true;
-  int i1:1;
-  int i2[3] = { 0, 1, 2 };
+  int i1 : 1;
+  int i2[3] = {0, 1, 2};
   struct {
     int i3;
   };

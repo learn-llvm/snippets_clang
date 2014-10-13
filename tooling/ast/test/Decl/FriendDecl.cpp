@@ -15,7 +15,8 @@
 // CHECK-NEXT:       TemplateTypeParmType
 // CHECK-NEXT:   TemplateTypeParmDecl
 // CHECK-NEXT:     DeclarationName T
-template <typename T> class test1 {
+template <typename T>
+class test1 {
   friend int foo();
   friend class A;
   friend T;

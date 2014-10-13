@@ -2,7 +2,8 @@
 
 void test() {
   __label__ l;
-  l: goto l;
+l:
+  goto l;
 };
 
 // CHECK:   CompoundStmt

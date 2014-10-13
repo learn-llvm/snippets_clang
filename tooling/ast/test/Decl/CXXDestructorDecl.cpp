@@ -15,8 +15,7 @@ class test1 {
 // CHECK-NEXT:   FunctionProtoType
 // CHECK-NEXT:     BuiltinType void
 // CHECK-NEXT:   CompoundStmt
-test1::~test1() {
-}
+test1::~test1() {}
 
 class test2 {
   // CHECK:   CXXDestructorDecl
@@ -24,6 +23,5 @@ class test2 {
   // CHECK-NEXT:     FunctionProtoType
   // CHECK-NEXT:       BuiltinType void
   // CHECK-NEXT:     CompoundStmt
-  ~test2() {
-  }
+  ~test2() {}
 };

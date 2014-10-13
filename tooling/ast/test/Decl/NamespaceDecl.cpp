@@ -11,10 +11,9 @@
 // CHECK-NEXT:       DeclarationName b2
 // CHECK-NEXT:       BuiltinType bool
 namespace test1 {
-  bool b1;
-  namespace {
-  };
-  namespace {
-    bool b2;
-  };
+bool b1;
+namespace {};
+namespace {
+bool b2;
+};
 };

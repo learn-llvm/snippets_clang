@@ -8,10 +8,9 @@
 // CHECK-NEXT:     NamespaceDeclRef B
 // CHECK-NEXT:     NestedNameSpecifier A::
 namespace A {
-  namespace B {
-  };
+namespace B {};
 };
 namespace test1 {
-  using namespace A;
-  using namespace A::B;
+using namespace A;
+using namespace A::B;
 };

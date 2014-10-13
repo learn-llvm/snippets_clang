@@ -10,7 +10,10 @@
 // CHECK-NEXT:         TemplateTypeParmType
 // CHECK-NEXT:   TemplateTypeParmDecl
 // CHECK-NEXT:     DeclarationName T
-template<typename T> void test1() { T(); };
+template <typename T>
+void test1() {
+  T();
+};
 
 // CHECK-NEXT: FunctionTemplateDecl
 // CHECK-NEXT:   FunctionDecl
@@ -24,4 +27,7 @@ template<typename T> void test1() { T(); };
 // CHECK-NEXT:         IntegerLiteral 1
 // CHECK-NEXT:   TemplateTypeParmDecl
 // CHECK-NEXT:     DeclarationName T
-template<typename T> void test2() { T(0, 1); };
+template <typename T>
+void test2() {
+  T(0, 1);
+};

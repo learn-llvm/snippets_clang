@@ -40,6 +40,7 @@ void test() {
   // CHECK-NEXT:         ElaboratedType
   // CHECK-NEXT:           RecordType B
   // CHECK-NEXT:         CXXConstructExpr
-  struct B { int i; } b;
+  struct B {
+    int i;
+  } b;
 };
-

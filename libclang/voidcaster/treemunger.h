@@ -20,7 +20,8 @@
  * @param func the name of the function called
  * @param loc the location at which the cast should be inserted
  */
-typedef void (*missingVoidProc)(const char *file, const char *func, module_loc_t loc);
+typedef void (*missingVoidProc)(const char *file, const char *func,
+                                module_loc_t loc);
 
 /**
  * Type of callback which acts upon a superfluous cast to void.
@@ -30,7 +31,8 @@ typedef void (*missingVoidProc)(const char *file, const char *func, module_loc_t
  * @param start the location where the cast starts
  * @param end the location where the cast ends
  */
-typedef void (*superfluousVoidProc)(const char *file, const char *func, module_loc_t start, module_loc_t end);
+typedef void (*superfluousVoidProc)(const char *file, const char *func,
+                                    module_loc_t start, module_loc_t end);
 
 /**
  * Processes one file of source code.
@@ -42,13 +44,9 @@ typedef void (*superfluousVoidProc)(const char *file, const char *func, module_l
  * @param superProc callback if a cast to void is superfluous
  * @return EXITCODE_OK, or the exit code which should be returned after cleanup
  */
-enum exitcodes_e processFile(
-	CXIndex idx,
-	const char *filename,
-	unsigned int argcount,
-	const char * const *args,
-	missingVoidProc missProc,
-	superfluousVoidProc superProc
-);
+enum exitcodes_e processFile(CXIndex idx, const char *filename,
+                             unsigned int argcount, const char *const *args,
+                             missingVoidProc missProc,
+                             superfluousVoidProc superProc);
 
 #endif

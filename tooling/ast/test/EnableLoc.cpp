@@ -3,12 +3,9 @@
 namespace test_namespace {
 
 class TheClass {
-public:
-  int theMethod(int x) {
-    return x + x;
-  }
+ public:
+  int theMethod(int x) { return x + x; }
 };
-
 }
 
 // CHECK: NamespaceDecl <{{.*}}:3:1-12:1>

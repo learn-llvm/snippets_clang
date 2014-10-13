@@ -2,10 +2,11 @@
 
 // CHECK:   CompoundStmt
 void test() {
-  // CHECK-NEXT:     LabelStmt
-  // CHECK-NEXT:       LabelDeclRef l
-  // CHECK-NEXT:       NullStmt
-  l:;
+// CHECK-NEXT:     LabelStmt
+// CHECK-NEXT:       LabelDeclRef l
+// CHECK-NEXT:       NullStmt
+l:
+  ;
 
   // CHECK-NEXT:     DeclStmt
   // CHECK-NEXT:       VarDecl

@@ -5,14 +5,16 @@
 // CHECK-NEXT:     DeclarationName test1
 // CHECK-NEXT:   TemplateTypeParmDecl
 // CHECK-NEXT:     DeclarationName T
-template<class T> class test1;
+template <class T>
+class test1;
 
 // CHECK-NEXT: ClassTemplateDecl
 // CHECK-NEXT:   CXXRecordDecl class
 // CHECK-NEXT:     DeclarationName test2
 // CHECK-NEXT:   TemplateTypeParmDecl
 // CHECK-NEXT:     DeclarationName T
-template<typename T> class test2;
+template <typename T>
+class test2;
 
 // CHECK-NEXT: ClassTemplateDecl
 // CHECK-NEXT:   CXXRecordDecl class
@@ -20,10 +22,12 @@ template<typename T> class test2;
 // CHECK-NEXT:   TemplateTypeParmDecl
 // CHECK-NEXT:     DeclarationName T
 // CHECK-NEXT:     BuiltinType bool
-template<typename T=bool> class test3;
+template <typename T = bool>
+class test3;
 
 // CHECK-NEXT: ClassTemplateDecl
 // CHECK-NEXT:   CXXRecordDecl class
 // CHECK-NEXT:     DeclarationName test4
 // CHECK-NEXT:   TemplateTypeParmDecl
-template<typename> class test4;
+template <typename>
+class test4;

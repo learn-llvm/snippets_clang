@@ -1,8 +1,7 @@
 // RUN: ast -f test "%s" 2>&1 | FileCheck %s
 
 void test() {
-  for (;;)
-    continue;
+  for (;;) continue;
 };
 
 // CHECK:   CompoundStmt

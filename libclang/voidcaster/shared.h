@@ -15,41 +15,39 @@
 extern const char *progname;
 
 /** A location in a code module. */
-typedef struct module_loc_s
-{
-	/** The line in the module. */
-	size_t line;
+typedef struct module_loc_s {
+  /** The line in the module. */
+  size_t line;
 
-	/** The column in the line. */
-	size_t col;
+  /** The column in the line. */
+  size_t col;
 } module_loc_t;
 
 /** The possible exit codes of this program. */
-enum exitcodes_e
-{
-	/**
-	 * No problems were encountered. If extended status mode is activated
-	 * (command-line flag -s), no suggestions for casts were given.
-	 */
-	EXITCODE_OK = 0,
+enum exitcodes_e {
+  /**
+   * No problems were encountered. If extended status mode is activated
+   * (command-line flag -s), no suggestions for casts were given.
+   */
+  EXITCODE_OK = 0,
 
-	/** Command-line arguments have been specified incorrectly. */
-	EXITCODE_USAGE = 1,
+  /** Command-line arguments have been specified incorrectly. */
+  EXITCODE_USAGE = 1,
 
-	/** A file could not be opened. */
-	EXITCODE_FILE_OPEN = 2,
+  /** A file could not be opened. */
+  EXITCODE_FILE_OPEN = 2,
 
-	/** A file could not be parsed. */
-	EXITCODE_FILE_PARSE = 3,
+  /** A file could not be parsed. */
+  EXITCODE_FILE_PARSE = 3,
 
-	/** Extended status mode is active and a suggestion was given. */
-	EXITCODE_EXT_SUGGEST = 4,
+  /** Extended status mode is active and a suggestion was given. */
+  EXITCODE_EXT_SUGGEST = 4,
 
-	/** Clang-related internal failure. */
-	EXITCODE_CLANG_FAIL = 5,
+  /** Clang-related internal failure. */
+  EXITCODE_CLANG_FAIL = 5,
 
-	/** Memory management error. */
-	EXITCODE_MM = 6
+  /** Memory management error. */
+  EXITCODE_MM = 6
 };
 
 #endif

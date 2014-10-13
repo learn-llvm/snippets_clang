@@ -6,9 +6,7 @@
 
 using namespace llvm;
 
-typedef struct {
-  std::string name;
-} MatchPattern;
+typedef struct { std::string name; } MatchPattern;
 
 enum CXChildVisitResult VisitorCallBack(CXCursor cursor, CXCursor parent,
                                         CXClientData clientData) {
@@ -23,11 +21,11 @@ enum CXChildVisitResult VisitorCallBack(CXCursor cursor, CXCursor parent,
   auto info = getStrFromCXString(clang_getCursorSpelling(cursor));
   if (mp->name == info) {
     auto kind = clang_getCursorKind(cursor);
-    errs() << format("%s: (%u, %u) %s: %s\n",
-                     getStrFromCXString(clang_getFileName(file)).data(), line,
-                     column, getStrFromCXString(
-                                 clang_getCursorKindSpelling(kind)).data(),
-                     info.data());
+    errs() << format(
+        "%s: (%u, %u) %s: %s\n",
+        getStrFromCXString(clang_getFileName(file)).data(), line, column,
+        getStrFromCXString(clang_getCursorKindSpelling(kind)).data(),
+        info.data());
   }
   return CXChildVisit_Recurse;
 }

@@ -13,6 +13,6 @@
 // CHECK-NEXT:       FunctionProtoType
 // CHECK-NEXT:         BuiltinType
 namespace test {
-  extern "C" void foo1();
-  extern "C++"void foo2();
+extern "C" void foo1();
+extern "C++" void foo2();
 }

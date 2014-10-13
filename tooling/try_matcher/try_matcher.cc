@@ -80,11 +80,12 @@ int main(int argc, const char **argv) {
 
   // Find an 'if' expression with a '==' comparison, the left-hand-side of which
   // is a variable of pointer type.
-  Finder.addMatcher(ifStmt(hasCondition(binaryOperator(
-                        hasOperatorName("=="),
-                        hasLHS(ignoringParenImpCasts(declRefExpr(to(varDecl(
-                            hasType(pointsTo(AnyType))).bind("lhs")))))))),
-                    &HandlerForIf);
+  Finder.addMatcher(
+      ifStmt(hasCondition(binaryOperator(
+          hasOperatorName("=="),
+          hasLHS(ignoringParenImpCasts(declRefExpr(
+              to(varDecl(hasType(pointsTo(AnyType))).bind("lhs")))))))),
+      &HandlerForIf);
 
   llvm::outs() << "Running tool with RecursiveASTVisitor\n";
   Tool.run(tooling::newFrontendActionFactory<MyFrontendAction>().get());

@@ -9,7 +9,8 @@
 // CHECK-NEXT:     DeclarationName T1
 // CHECK-NEXT:     TemplateTypeParmDecl
 // CHECK-NEXT:       DeclarationName T2
-template <template <typename T2> class T1> void test1();
+template <template <typename T2> class T1>
+void test1();
 
 // CHECK-NEXT: FunctionTemplateDecl
 // CHECK-NEXT:   FunctionDecl
@@ -18,7 +19,8 @@ template <template <typename T2> class T1> void test1();
 // CHECK-NEXT:       BuiltinType void
 // CHECK-NEXT:   TemplateTemplateParmDecl
 // CHECK-NEXT:     TemplateTypeParmDecl
-template <template <typename> class> void test2();
+template <template <typename> class>
+void test2();
 
 // CHECK-NEXT: FunctionTemplateDecl
 // CHECK-NEXT:   FunctionDecl
@@ -28,4 +30,5 @@ template <template <typename> class> void test2();
 // CHECK-NEXT:   TemplateTemplateParmDecl
 // CHECK-NEXT:     TemplateTemplateParmDecl
 // CHECK-NEXT:       TemplateTypeParmDecl
-template <template <template <typename> class> class> void test3();
+template <template <template <typename> class> class>
+void test3();

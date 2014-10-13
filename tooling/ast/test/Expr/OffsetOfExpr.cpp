@@ -15,6 +15,4 @@ struct T {
 // CHECK-NEXT:     ElaboratedType
 // CHECK-NEXT:       RecordType T
 // CHECK-NEXT:     IntegerLiteral 2
-void test1() {
-  __builtin_offsetof(struct T, s[2].d);
-}
+void test1() { __builtin_offsetof(struct T, s[2].d); }

@@ -1,7 +1,6 @@
 // RUN: ast -f test -- -Wno-unused "%s" 2>&1 | FileCheck %s
 
-class A {
-};
+class A {};
 
 // CHECK: CompoundStmt
 void test1() {
@@ -31,9 +30,9 @@ void test1() {
   // CHECK-NEXT:       VarDecl
   // CHECK-NEXT:         DeclarationName j
   // CHECK-NEXT:         BuiltinType int
-  void (A::* f)();
+  void (A::*f)();
   A a;
-  A *pa;
+  A* pa;
   int i;
   int j;
 
@@ -65,7 +64,7 @@ void test1() {
   // CHECK-NEXT:       ImplicitCastExpr LValueToRValue
   // CHECK-NEXT:         DeclRefExpr
   // CHECK-NEXT:           DeclarationName j
-  i * j;
+  i* j;
 
   // CHECK-NEXT:     BinaryOperator /
   // CHECK-NEXT:       ImplicitCastExpr LValueToRValue
@@ -182,7 +181,7 @@ void test1() {
   // CHECK-NEXT:       ImplicitCastExpr LValueToRValue
   // CHECK-NEXT:         DeclRefExpr
   // CHECK-NEXT:           DeclarationName j
-  i & j;
+  i& j;
 
   // CHECK-NEXT:     BinaryOperator ^
   // CHECK-NEXT:       ImplicitCastExpr LValueToRValue
@@ -211,7 +210,7 @@ void test1() {
   // CHECK-NEXT:         ImplicitCastExpr LValueToRValue
   // CHECK-NEXT:           DeclRefExpr
   // CHECK-NEXT:             DeclarationName j
-  i && j;
+  i&& j;
 
   // CHECK-NEXT:     BinaryOperator ||
   // CHECK-NEXT:       ImplicitCastExpr IntegralToBoolean
@@ -317,5 +316,5 @@ void test1() {
   // CHECK-NEXT:         DeclarationName i
   // CHECK-NEXT:       DeclRefExpr
   // CHECK-NEXT:         DeclarationName j
-  i , j;
+  i, j;
 }

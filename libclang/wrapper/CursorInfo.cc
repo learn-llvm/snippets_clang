@@ -12,7 +12,7 @@ namespace {
 std::string getLinkageName(CXCursor const &cursor) {
   typedef std::map<CXLinkageKind, std::string> LinkNameTy;
   CXLinkageKind linkage = clang_getCursorLinkage(cursor);
-  static LinkNameTy linkName{LinkPair(Invalid),  LinkPair(NoLinkage),
+  static LinkNameTy linkName{LinkPair(Invalid), LinkPair(NoLinkage),
                              LinkPair(Internal), LinkPair(UniqueExternal),
                              LinkPair(External)};
   auto find = linkName.find(linkage);

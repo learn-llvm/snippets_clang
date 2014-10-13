@@ -2,11 +2,11 @@
 
 void test() {
   switch (0) {
-  case 0:
-  case 1:
-    break;
-  default:
-    break;
+    case 0:
+    case 1:
+      break;
+    default:
+      break;
   }
 };
 
@@ -21,4 +21,3 @@ void test() {
 // CHECK-NEXT:           BreakStmt
 // CHECK-NEXT:         DefaultStmt
 // CHECK-NEXT:           BreakStmt
-

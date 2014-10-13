@@ -11,8 +11,4 @@
 // CHECK-NEXT:   ImplicitCastExpr IntegralCast
 // CHECK-NEXT:     DeclRefExpr
 // CHECK-NEXT:       DeclarationName test1
-enum A {
-  test1,
-  test2 = 0,
-  test3 = test1
-};
+enum A { test1, test2 = 0, test3 = test1 };

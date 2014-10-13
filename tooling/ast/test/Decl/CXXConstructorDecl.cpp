@@ -15,8 +15,7 @@ class test1 {
 // CHECK-NEXT:   FunctionProtoType
 // CHECK-NEXT:     BuiltinType void
 // CHECK-NEXT:   CompoundStmt
-test1::test1() {
-}
+test1::test1() {}
 
 class test2 {
   // CHECK:   CXXConstructorDecl
@@ -27,12 +26,10 @@ class test2 {
   // CHECK-NEXT:         DeclarationName a
   // CHECK-NEXT:         BuiltinType int
   // CHECK-NEXT:     CompoundStmt
-  test2(int a) {
-  }
+  test2(int a) {}
 };
 
-class A {
-};
+class A {};
 
 class test3 : public A {
   int I;
@@ -47,20 +44,19 @@ class test3 : public A {
   // CHECK-NEXT:       ParmVarDecl
   // CHECK-NEXT:         DeclarationName i
   // CHECK-NEXT:         BuiltinType int
-  // CHECK-NEXT:     CXXCtorInitializer 
+  // CHECK-NEXT:     CXXCtorInitializer
   // CHECK-NEXT:       RecordType A
   // CHECK-NEXT:       CXXConstructExpr
   // CHECK-NEXT:         ImplicitCastExpr NoOp
   // CHECK-NEXT:           DeclRefExpr
   // CHECK-NEXT:             DeclarationName a
-  // CHECK-NEXT:     CXXCtorInitializer 
+  // CHECK-NEXT:     CXXCtorInitializer
   // CHECK-NEXT:       FieldDeclRef I
   // CHECK-NEXT:       ImplicitCastExpr LValueToRValue
   // CHECK-NEXT:         DeclRefExpr
   // CHECK-NEXT:           DeclarationName i
   // CHECK-NEXT:     CompoundStmt
-  test3(A& a, int i) : A(a), I(i) {
-  }
+  test3(A& a, int i) : A(a), I(i) {}
 };
 
 class test4 : public A {
@@ -69,6 +65,5 @@ class test4 : public A {
   // CHECK-NEXT:     FunctionProtoType
   // CHECK-NEXT:       BuiltinType void
   // CHECK-NEXT:     CompoundStmt
-  test4() {
-  }
+  test4() {}
 };

@@ -1,7 +1,6 @@
 // RUN: ast -f Bool "%s" 2>&1 | FileCheck %s
 
 class test1 {
-
   // CHECK: CXXConversionDecl
   // CHECK-NEXT:   DeclarationName operator _Bool
   // CHECK-NEXT:     BuiltinType bool

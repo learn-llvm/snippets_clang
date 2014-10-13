@@ -4,8 +4,7 @@ struct A {
   virtual void f();
 };
 
-struct B : A {
-};
+struct B : A {};
 
 void test1() {
   const char *p;

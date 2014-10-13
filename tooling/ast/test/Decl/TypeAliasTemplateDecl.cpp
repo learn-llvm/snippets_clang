@@ -6,4 +6,5 @@
 // CHECK-NEXT:     TemplateTypeParmType
 // CHECK-NEXT:   TemplateTypeParmDecl
 // CHECK-NEXT:     DeclarationName T
-template<typename T> using test1 = T;
+template <typename T>
+using test1 = T;

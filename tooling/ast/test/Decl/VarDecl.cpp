@@ -35,12 +35,12 @@ namespace A {
 // CHECK: VarDecl extern
 // CHECK-NEXT:   DeclarationName test7
 // CHECK-NEXT:   BuiltinType int
-  extern int test7;
+extern int test7;
 
 // CHECK: VarDecl extern
 // CHECK-NEXT:   DeclarationName test8
 // CHECK-NEXT:   BuiltinType int
-  extern int test8;
+extern int test8;
 };
 
 // CHECK: VarDecl
@@ -69,5 +69,7 @@ int A::test8 = 0;
 // FIXME: the VarDecl shouldn't be implicit
 // FIXME: should traverse the RecordDecl too
 void test9() {
-  union { int i; };
+  union {
+    int i;
+  };
 }

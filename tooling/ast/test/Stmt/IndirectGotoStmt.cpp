@@ -1,7 +1,8 @@
 // RUN: ast -f test "%s" 2>&1 | FileCheck %s
 
 void test() {
-  l:;
+l:
+  ;
   void *p = &&l;
   goto *p;
 };

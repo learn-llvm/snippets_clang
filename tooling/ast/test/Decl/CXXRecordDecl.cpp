@@ -3,7 +3,6 @@
 // CHECK: CXXRecordDecl class
 // CHECK-NEXT:   DeclarationName test1
 class test1 {
-
   // CHECK-NEXT:   CXXRecordDecl class
   // CHECK-NEXT:     FieldDecl
   // CHECK-NEXT:       DeclarationName i
@@ -31,17 +30,14 @@ class test3 {
   char c[];
 };
 
-class A {
-};
+class A {};
 
 // CHECK-NEXT: CXXRecordDecl class
 // CHECK-NEXT:   DeclarationName test4
 // CHECK-NEXT:   RecordType A
-class test4 : A {
-};
+class test4 : A {};
 
 // CHECK-NEXT: CXXRecordDecl class
 // CHECK-NEXT:   DeclarationName test5
 // CHECK-NEXT:   RecordType A
-class test5 : virtual A {
-};
+class test5 : virtual A {};

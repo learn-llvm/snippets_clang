@@ -5,7 +5,7 @@ class C {
   void f();
 };
 
-void C::f() { }
+void C::f() {}
 
 void hoge() {
   sampleInt a = 10;

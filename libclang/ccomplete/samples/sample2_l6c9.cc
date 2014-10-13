@@ -1,7 +1,5 @@
 namespace hoge {
-  void put(int a);
+void put(int a);
 }
 
-int main(void) {
-  hoge::
-}
+int main(void) { hoge:: }

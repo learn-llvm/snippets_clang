@@ -2,7 +2,8 @@
 
 int i;
 namespace A {
-  template<typename T> T f();
+template <typename T>
+T f();
 };
 
 // CHECK:   CompoundStmt

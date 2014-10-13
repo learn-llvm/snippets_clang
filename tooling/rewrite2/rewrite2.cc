@@ -23,8 +23,8 @@ class IfStmtHandler : public ast_matchers::MatchFinder::MatchCallback {
  public:
   IfStmtHandler(tooling::Replacements *Replace) : Replace(Replace) {}
 
-  virtual void run(const ast_matchers::MatchFinder::MatchResult &Result)
-      override {
+  virtual void run(
+      const ast_matchers::MatchFinder::MatchResult &Result) override {
     // The matched 'if' statement was bound to 'ifStmt'.
     if (auto *IfS = Result.Nodes.getNodeAs<IfStmt>("ifStmt")) {
       const Stmt *Then = IfS->getThen();

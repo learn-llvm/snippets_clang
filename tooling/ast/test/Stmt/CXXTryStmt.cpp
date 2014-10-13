@@ -7,7 +7,6 @@
 // CHECK-NEXT:         CompoundStmt
 void test() {
   try {
-  }
-  catch (...) {
+  } catch (...) {
   }
 };

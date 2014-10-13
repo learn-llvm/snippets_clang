@@ -1,7 +1,6 @@
 // RUN: ast -f test "%s" 2>&1 | FileCheck %s
 
-class E {
-};
+class E {};
 
 // CHECK:   CompoundStmt
 // CHECK-NEXT:     CXXTryStmt
@@ -15,9 +14,7 @@ class E {
 // CHECK-NEXT:         CompoundStmt
 void test() {
   try {
-  }
-  catch (E e) {
-  }
-  catch (...) {
+  } catch (E e) {
+  } catch (...) {
   }
 };

@@ -3,6 +3,4 @@
 // CHECK: CompoundStmt
 // CHECK-NEXT:   ParenExpr
 // CHECK-NEXT:     IntegerLiteral 1
-void test1() {
-  (1);
-}
+void test1() { (1); }

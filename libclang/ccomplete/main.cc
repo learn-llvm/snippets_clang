@@ -9,20 +9,19 @@ typedef std::map<CXCompletionChunkKind, std::string> CompletionMap;
 #define PAIR(name) \
   { CXCompletionChunk_##name, #name }
 CompletionMap completionMap{
-    PAIR(Optional),        PAIR(TypedText),    PAIR(Text),
-    PAIR(Placeholder),     PAIR(Informative),  PAIR(CurrentParameter),
-    PAIR(LeftParen),       PAIR(RightParen),   PAIR(LeftBracket),
-    PAIR(RightBracket),    PAIR(LeftBrace),    PAIR(RightBrace),
-    PAIR(LeftAngle),       PAIR(RightAngle),   PAIR(Comma),
-    PAIR(ResultType),      PAIR(Colon),        PAIR(Equal),
-    PAIR(HorizontalSpace), PAIR(VerticalSpace)};
+    PAIR(Optional), PAIR(TypedText), PAIR(Text), PAIR(Placeholder),
+    PAIR(Informative), PAIR(CurrentParameter), PAIR(LeftParen),
+    PAIR(RightParen), PAIR(LeftBracket), PAIR(RightBracket), PAIR(LeftBrace),
+    PAIR(RightBrace), PAIR(LeftAngle), PAIR(RightAngle), PAIR(Comma),
+    PAIR(ResultType), PAIR(Colon), PAIR(Equal), PAIR(HorizontalSpace),
+    PAIR(VerticalSpace)};
 #undef PAIR
 
 typedef std::map<CXAvailabilityKind, char const *> AvailMap;
 #define PAIR(name) \
   { CXAvailability_##name, #name }
-AvailMap availMap{PAIR(Available),    PAIR(Deprecated),
-                  PAIR(NotAvailable), PAIR(NotAccessible)};
+AvailMap availMap{PAIR(Available), PAIR(Deprecated), PAIR(NotAvailable),
+                  PAIR(NotAccessible)};
 #undef PAIR
 
 constexpr int NUM = 4;

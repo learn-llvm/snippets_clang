@@ -29,7 +29,8 @@ void interactMissingVoid(const char *file, const char *func, module_loc_t loc);
  * @param start the location where the cast starts
  * @param end the location where the cast ends
  */
-void interactSuperfluousVoid(const char *file, const char *func, module_loc_t start, module_loc_t end);
+void interactSuperfluousVoid(const char *file, const char *func,
+                             module_loc_t start, module_loc_t end);
 
 /**
  * Disposes of all modifications. Call to clean up.

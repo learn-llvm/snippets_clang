@@ -7,6 +7,7 @@
 // CHECK-NEXT:       BuiltinType void
 // CHECK-NEXT:   TemplateTypeParmDecl
 // CHECK-NEXT:     DeclarationName T
-template<class T> void test1();
+template <class T>
+void test1();
 
 // TODO: implicit instantiations

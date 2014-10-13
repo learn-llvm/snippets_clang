@@ -1,7 +1,9 @@
 // RUN: ast -i -f test "%s" 2>&1 | FileCheck %s
 
 void test() {
-  union { int i; };
+  union {
+    int i;
+  };
 }
 
 // CHECK: CompoundStmt

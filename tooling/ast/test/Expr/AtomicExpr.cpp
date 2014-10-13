@@ -7,7 +7,7 @@ void test1() {
   // CHECK-NEXT:         DeclarationName i
   // CHECK-NEXT:         AtomicType
   // CHECK-NEXT:           BuiltinType int
-  _Atomic(int) i;
+  _Atomic(int)i;
 
   // CHECK-NEXT:     AtomicExpr __c11_atomic_init
   // CHECK-NEXT:       UnaryOperator &

@@ -1,7 +1,7 @@
 // RUN: ast -f test "%s" 2>&1 | FileCheck %s
 
 namespace A {
-  int i;
+int i;
 };
 
 // CHECK: NamespaceDecl
@@ -10,5 +10,5 @@ namespace A {
 // CHECK-NEXT:     NestedNameSpecifier A::
 // CHECK-NEXT:     DeclarationName i
 namespace test1 {
-  using A::i;
+using A::i;
 };

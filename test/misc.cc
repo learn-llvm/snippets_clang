@@ -16,9 +16,8 @@ int bar(my_union* mu) { return mu[4].inum; }
 void foo(int* a, int* b) {
   if (a[0] > 1) {
     b[0] = 2;
-  }
-  else{
-    b[0]=1; 
+  } else {
+    b[0] = 1;
   }
 }
 
@@ -27,7 +26,7 @@ void bar(float x, float y);
 float baz() { return gfloat + **gppfloat; }
 
 void bang(int* arr, int v) {
-  while(v--){
+  while (v--) {
     arr[i] += v;
   }
   for (int i = 0; i < v; ++i) {

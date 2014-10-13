@@ -6,5 +6,5 @@
 // CHECK-NEXT:     CXXBoolLiteralExpr true
 // CHECK-NEXT:     StringLiteral "msg"
 namespace test1 {
-  static_assert(true, "msg");
+static_assert(true, "msg");
 };
