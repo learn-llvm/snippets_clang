@@ -5,6 +5,8 @@
 #include <set>
 #include <map>
 #include <string>
+#include <cstdlib>
+#include <cstddef>
 
 using namespace llvm;
 
@@ -19,7 +21,7 @@ std::string getStrFromCXString(CXString const &cxstring) {
 int DBParser(int argc, char **argv) {
   if (argc != 2) {
     errs() << format("%s database_dir\n", argv[0]);
-    exit(1);
+    std::exit(1);
   }
 
   CXCompilationDatabase_Error error;
@@ -30,10 +32,10 @@ int DBParser(int argc, char **argv) {
       break;
     case CXCompilationDatabase_CanNotLoadDatabase:
       errs() << "Cannot load database\n";
-      exit(1);
+      std::exit(1);
     default:
       errs() << "unknown return\n";
-      exit(1);
+      std::exit(1);
   }
 
   auto cmds = clang_CompilationDatabase_getAllCompileCommands(db);

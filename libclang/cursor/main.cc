@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <cassert>
+#include <cstddef>
 #include <string>
 
 #include "Common.hpp"

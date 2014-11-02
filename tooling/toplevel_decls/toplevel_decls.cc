@@ -1,4 +1,5 @@
 #include <sstream>
+#include <cstddef>
 #include <string>
 
 #include "clang/AST/AST.h"

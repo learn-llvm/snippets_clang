@@ -1,4 +1,6 @@
 #include "Common.hpp"
+
+#include <cstddef>
 #include <map>
 
 auto printLoc = [](char const *hint, CXSourceLocation const &loc) {

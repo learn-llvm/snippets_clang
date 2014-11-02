@@ -36,6 +36,7 @@
 // ===----------------------------------------------------------------------===//
 
 // Standard includes
+#include <cstddef>
 #include <cstdio>
 #include <map>
 #include <string>

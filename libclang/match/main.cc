@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cstddef>
 #include <string>
 
 #include "llvm/Support/Signals.h"

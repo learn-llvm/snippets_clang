@@ -1,4 +1,5 @@
 #include <string>
+#include <cstddef>
 
 #include "clang/AST/AST.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
