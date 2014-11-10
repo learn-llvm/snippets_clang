@@ -26,9 +26,11 @@ set(CLANG_TOOLS
   ast
   complex
   clang_check
+  cfe
   rewrite1
   rewrite2
   rewrite3
+  tokens
   toplevel_decls
   try_matcher
   )
