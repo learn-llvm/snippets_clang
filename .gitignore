@@ -5,3 +5,4 @@
 *.ll
 *.bc
 build/
+.DS_Store
