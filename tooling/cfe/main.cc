@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
     return 1;
   }
   CI.getSourceManager().createMainFileID(pFile);
-  CI.getDiagnosticsClient().BeginSourceFile(CI.getLangOpts(), 0);
+  CI.getDiagnosticClient().BeginSourceFile(CI.getLangOpts(), 0);
   ParseAST(CI.getSema());
   // Print AST statistics
   CI.getASTContext().PrintStats();

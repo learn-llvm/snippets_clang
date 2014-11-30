@@ -12,7 +12,7 @@ set(CLANG_LIBS
   -lclangSema
   -lclangEdit
   -lclangASTMatchers
-  -lclangRewrite
+  # -lclangRewrite
   -lclangRewriteFrontend
   -lclangStaticAnalyzerFrontend
   -lclangStaticAnalyzerCheckers
@@ -23,16 +23,16 @@ set(CLANG_LIBS
   )
 
 set(CLANG_TOOLS
-  ast
-  complex
-  clang_check
+  # ast
+  # complex
+  # clang_check
   cfe
-  rewrite1
-  rewrite2
-  rewrite3
-  tokens
-  toplevel_decls
-  try_matcher
+  # rewrite1
+  # rewrite2
+  # rewrite3
+  # tokens
+  # toplevel_decls
+  # try_matcher
   )
 foreach(TOOL ${CLANG_TOOLS})
   add_subdirectory(${TOOL})

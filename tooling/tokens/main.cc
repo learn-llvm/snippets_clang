@@ -10,7 +10,7 @@ int main(int argc, char **argv) {
   cl::ParseCommandLineOptions(argc, argv, "My tokenizer\n");
   CXIndex index = clang_createIndex(0, 0);
   const char *args[] = {"-I/usr/include", "-I."};
-  CXTranslationUnit translationUnit = clang_ parseTranslationUnit(
+  CXTranslationUnit translationUnit = clang_parseTranslationUnit(
       index, FileName.c_str(), 2, NULL, 0, CXTranslationUnit_None);
   CXFile file = clang_getFile(translationUnit, FileName.c_str());
   CXSourceLocation loc_start =
