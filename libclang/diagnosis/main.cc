@@ -72,7 +72,7 @@ constexpr int NUM = 2;
 int main(int argc, char **argv) {
   if (argc < NUM) {
     errs() << "usage: " << argv[0] << " filename [options ...]\n";
-    std::exit(1);
+    exit(1);
   }
 
   CXIndex index = clang_createIndex(1, 0);

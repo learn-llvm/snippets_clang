@@ -1,6 +1,8 @@
 #include "CursorInfo.hpp"
 #include "CursorCounter.hpp"
 
+#include <cstdlib>
+
 typedef unsigned LevelType;
 
 using namespace llvm;
@@ -36,7 +38,7 @@ enum CXChildVisitResult visitChildrenCallback(CXCursor cursor, CXCursor parent,
 int main(int argc, char **argv) {
   if (argc < 2) {
     std::fprintf(stderr, "usage: %s ${c_cxx_src_file}", argv[0]);
-    std::exit(1);
+    exit(1);
   }
   char const *filename = argv[1];
   CXIndex idx = clang_createIndex(1, 0);
