@@ -26,26 +26,27 @@ int main(int argc, char **argv) {
   CompilerInstance CI;
   DiagnosticOptions diagnosticOptions;
   CI.createDiagnostics();
-  IntrusiveRefCntPtr<TargetOptions> PTO(new TargetOptions());
+  // IntrusiveRefCntPtr<TargetOptions> PTO(new TargetOptions());
+  auto PTO = std::make_shared<TargetOptions>(TargetOptions());
   PTO->Triple = sys::getDefaultTargetTriple();
-  TargetInfo *PTI =
-      TargetInfo::CreateTargetInfo(CI.getDiagnostics(), PTO.getPtr());
+  TargetInfo *PTI = TargetInfo::CreateTargetInfo(CI.getDiagnostics(), PTO);
   CI.setTarget(PTI);
 
   CI.createFileManager();
   CI.createSourceManager(CI.getFileManager());
-  CI.createPreprocessor();
+  CI.createPreprocessor(TranslationUnitKind::TU_Complete);
   CI.getPreprocessorOpts().UsePredefines = false;
   ASTConsumer *astConsumer = CreateASTPrinter(NULL, "");
   CI.setASTConsumer(astConsumer);
   CI.createASTContext();
   CI.createSema(TU_Complete, NULL);
-  const FileEntry *pFile = CI.getFileManager().getFile(FileName);
+  FileEntry const *pFile = CI.getFileManager().getFile(FileName);
   if (!pFile) {
     std::cerr << "File not found: " << FileName << std::endl;
     return 1;
   }
-  CI.getSourceManager().createMainFileID(pFile);
+  SourceManager &sm = CI.getSourceManager();
+  sm.createFileID(pFile, SourceLocation(), SrcMgr::C_User);
   CI.getDiagnosticClient().BeginSourceFile(CI.getLangOpts(), 0);
   ParseAST(CI.getSema());
   // Print AST statistics

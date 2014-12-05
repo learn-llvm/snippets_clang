@@ -1,5 +1,5 @@
 set(CLANG_LIBS
-  -Wl,--start-group
+  # -Wl,--start-group
   -lclangAST
   -lclangAnalysis
   -lclangBasic
@@ -19,7 +19,7 @@ set(CLANG_LIBS
   -lclangStaticAnalyzerCore
   -lclangSerialization
   -lclangTooling
-  -Wl,--end-group
+  # -Wl,--end-group
   )
 
 set(CLANG_TOOLS
