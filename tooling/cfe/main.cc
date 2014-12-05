@@ -1,4 +1,4 @@
-#include "llvm/ADT/IntrusiveRefCntPtr.h"
+#include "llvm/ADT/StringMap.h"
 #include "llvm/Support/CommandLine.h"
 #include "llvm/Support/Host.h"
 #include "clang/AST/ASTContext.h"
@@ -16,41 +16,87 @@
 #include "clang/Lex/Preprocessor.h"
 #include "clang/Parse/Parser.h"
 #include "clang/Parse/ParseAST.h"
-#include <iostream>
+
 using namespace llvm;
 using namespace clang;
 static cl::opt<std::string> FileName(cl::Positional, cl::desc("Input file"),
                                      cl::Required);
+
 int main(int argc, char **argv) {
   cl::ParseCommandLineOptions(argc, argv, "My simple front end\n");
   CompilerInstance CI;
   DiagnosticOptions diagnosticOptions;
-  CI.createDiagnostics();
-  // IntrusiveRefCntPtr<TargetOptions> PTO(new TargetOptions());
+  CI.createDiagnostics(nullptr, true);
   auto PTO = std::make_shared<TargetOptions>(TargetOptions());
   PTO->Triple = sys::getDefaultTargetTriple();
+  {
+    llvm::errs() << "targetTriple:" << sys::getDefaultTargetTriple() << '\n'
+                 << "cpu name: " << sys::getHostCPUName() << '\n'
+                 << "process triple: " << sys::getProcessTriple() << '\n'
+                 << "Big endian: " << sys::IsBigEndianHost << '\n';
+    StringMap<bool> strMap;
+    bool succeed = sys::getHostCPUFeatures(strMap);
+    if (succeed) {
+      errs() << "features: ";
+      for (auto &feature : strMap) {
+        errs() << feature.getKey() << ": " << feature.getValue();
+      }
+    }
+  }
   TargetInfo *PTI = TargetInfo::CreateTargetInfo(CI.getDiagnostics(), PTO);
   CI.setTarget(PTI);
 
   CI.createFileManager();
-  CI.createSourceManager(CI.getFileManager());
+  FileManager &filemgr = CI.getFileManager();
+  CI.createSourceManager(filemgr);
   CI.createPreprocessor(TranslationUnitKind::TU_Complete);
   CI.getPreprocessorOpts().UsePredefines = false;
   ASTConsumer *astConsumer = CreateASTPrinter(NULL, "");
   CI.setASTConsumer(astConsumer);
   CI.createASTContext();
   CI.createSema(TU_Complete, NULL);
+  {
+    errs() << "hasdiagnostics: " << CI.hasDiagnostics() << '\n';
+    errs() << "hasinvocation: " << CI.hasInvocation() << '\n';
+    {
+      auto &headerSearchOpts = CI.getHeaderSearchOpts();
+      errs() << "sysroot: " << headerSearchOpts.Sysroot << '\n';
+      errs() << "resourceDir: " << headerSearchOpts.ResourceDir << '\n';
+      errs() << "ModuleUserBuildPath: " << headerSearchOpts.ModuleUserBuildPath
+             << '\n';
+      errs() << "header user entries:\t";
+      for (auto &entry : headerSearchOpts.UserEntries) {
+        errs() << entry.Path << "  ";
+      }
+      errs() << '\n';
+      errs() << "system header entries:\t";
+      for (auto &entry : headerSearchOpts.SystemHeaderPrefixes) {
+        errs() << entry.Prefix << ": " << entry.IsSystemHeader << '\t';
+      }
+      errs() << '\n';
+      for (auto &ignoredMacro : headerSearchOpts.ModulesIgnoreMacros) {
+        errs() << ignoredMacro << '\n';
+      }
+    }
+  }
   FileEntry const *pFile = CI.getFileManager().getFile(FileName);
   if (!pFile) {
-    std::cerr << "File not found: " << FileName << std::endl;
+    errs() << "File not found: " << FileName << '\n';
     return 1;
   }
+  {
+    errs() << "name: " << pFile->getName() << '\n';
+    errs() << "dir: " << pFile->getDir()->getName() << '\n';
+    errs() << "size: " << pFile->getSize() << '\n';
+    errs() << "uid:" << pFile->getUID() << " uniqueID: " << pFile->getUID()
+           << '\n';
+  }
   SourceManager &sm = CI.getSourceManager();
-  sm.createFileID(pFile, SourceLocation(), SrcMgr::C_User);
+  sm.setMainFileID(sm.createFileID(pFile, SourceLocation(), SrcMgr::C_User));
   CI.getDiagnosticClient().BeginSourceFile(CI.getLangOpts(), 0);
-  ParseAST(CI.getSema());
+  /// ParseAST(CI.getSema());
   // Print AST statistics
-  CI.getASTContext().PrintStats();
+  /// CI.getASTContext().PrintStats();
   CI.getASTContext().Idents.PrintStats();
   return 0;
 }
