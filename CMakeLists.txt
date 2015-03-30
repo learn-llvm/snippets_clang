@@ -24,3 +24,4 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
 # -------------------------------------------------------------------
 add_subdirectory(tooling)
+add_subdirectory(plugin)

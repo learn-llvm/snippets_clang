@@ -1,5 +1,5 @@
 set(CLANG_LIBS
-  # -Wl,--start-group
+  -Wl,--start-group
   -lclangAST
   -lclangAnalysis
   -lclangBasic
@@ -12,14 +12,14 @@ set(CLANG_LIBS
   -lclangSema
   -lclangEdit
   -lclangASTMatchers
-  # -lclangRewrite
+  -lclangRewrite
   -lclangRewriteFrontend
   -lclangStaticAnalyzerFrontend
   -lclangStaticAnalyzerCheckers
   -lclangStaticAnalyzerCore
   -lclangSerialization
   -lclangTooling
-  # -Wl,--end-group
+  -Wl,--end-group
   )
 
 set(CLANG_TOOLS

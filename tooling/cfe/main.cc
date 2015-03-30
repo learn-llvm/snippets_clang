@@ -51,8 +51,8 @@ int main(int argc, char **argv) {
   CI.createSourceManager(filemgr);
   CI.createPreprocessor(TranslationUnitKind::TU_Complete);
   CI.getPreprocessorOpts().UsePredefines = false;
-  ASTConsumer *astConsumer = CreateASTPrinter(NULL, "");
-  CI.setASTConsumer(astConsumer);
+  std::unique_ptr<ASTConsumer> astConsumer = CreateASTPrinter(NULL, "");
+  CI.setASTConsumer(std::move(astConsumer));
   CI.createASTContext();
   CI.createSema(TU_Complete, NULL);
   {
