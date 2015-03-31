@@ -24,6 +24,7 @@ int main(int argc, char *argv[]) {
       size = ntohl(size);
 
       if (size < sizeof(data_array)) {
+        // limited to size, no bug
         memcpy(buf, data_array, size);
       }
 

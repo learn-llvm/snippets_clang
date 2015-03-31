@@ -9,7 +9,7 @@
 using namespace clang;
 using namespace ento;
 
-namespace {
+namespace chx {
 class MyDZChecker
     : public Checker<check::PreStmt<BinaryOperator>, check::PostCall> {
   mutable std::unique_ptr<BugType> BT;
@@ -23,7 +23,6 @@ class MyDZChecker
                                      categories::LogicError)) {}
   void checkPostCall(CallEvent const &, CheckerContext &) const;
 };
-}  // end anonymous namespace
 
 void MyDZChecker::reportBug(const char *Msg, ProgramStateRef StateZero,
                             CheckerContext &C) const {
@@ -93,3 +92,5 @@ void MyDZChecker::checkPostCall(CallEvent const &call,
     }
   }
 }
+
+}  // end namespace
