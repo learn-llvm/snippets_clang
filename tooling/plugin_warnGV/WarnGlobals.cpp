@@ -8,7 +8,7 @@
 
 namespace {
 
-class PrintGlobalsVisitor
+class PrintGlobalsVisitor final
     : public clang::RecursiveASTVisitor<PrintGlobalsVisitor> {
  public:
   explicit PrintGlobalsVisitor(clang::ASTContext *Context) : Context(Context) {}
@@ -31,7 +31,7 @@ class PrintGlobalsVisitor
   clang::ASTContext *Context;
 };
 
-class PrintGlobalsConsumer : public clang::ASTConsumer {
+class PrintGlobalsConsumer final : public clang::ASTConsumer {
  public:
   explicit PrintGlobalsConsumer(clang::ASTContext *Context)
       : Visitor(Context) {}
@@ -44,11 +44,14 @@ class PrintGlobalsConsumer : public clang::ASTConsumer {
   PrintGlobalsVisitor Visitor;
 };
 
-class PrintGlobalsAction : public clang::PluginASTAction {
+class PrintGlobalsAction final : public clang::PluginASTAction {
+  virtual void anchor() final {}
+
  protected:
-  clang::ASTConsumer *CreateASTConsumer(clang::CompilerInstance &CI,
-                                        llvm::StringRef) {
-    return new PrintGlobalsConsumer(&CI.getASTContext());
+  std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(
+      clang::CompilerInstance &CI, llvm::StringRef) {
+    return std::make_unique<clang::ASTConsumer>(
+        PrintGlobalsConsumer(&CI.getASTContext()));
   }
 
   bool ParseArgs(const clang::CompilerInstance &CI,
