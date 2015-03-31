@@ -64,7 +64,7 @@ def get_plugin_list():
 
 
 disabled_list = ['core.DivideZero']
-enabled_list = ['chx.DZChecker', 'chx.NetChecker']
+enabled_list = ['chx']
 load_list = get_plugin_list()
 
 

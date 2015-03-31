@@ -1,3 +1,5 @@
+// vim: set ft=tablegen ts=4 sw=2 tw=0 et :
+
 class FPFormat<bits<3> val> {
   bits<3> Value = val;
 }

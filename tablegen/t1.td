@@ -1,6 +1,8 @@
+// vim: set ft=tablegen ts=4 sw=2 tw=0 et :
+
 class C {
   bit V = 1;
-  /* string NAME = "CC"; */
+  // string NAME = "CC";
 }
 
 def X : C;

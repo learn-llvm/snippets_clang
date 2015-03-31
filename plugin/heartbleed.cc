@@ -139,9 +139,7 @@ void NetworkTaintChecker::checkPreCall(const CallEvent &call,
       if (isArgUnConstrained(SizeArgNL, svalBuilder, state) == true) {
         ExplodedNode *loc = C.generateSink();
         if (loc) {
-          BugReport *bug = new BugReport(
-              *this->BT, "Tainted, unconstrained value used in memcpy size",
-              loc);
+          BugReport *bug = new BugReport(*this->BT, "bug1", loc);
           C.emitReport(bug);
         }
       }
@@ -176,8 +174,7 @@ void NetworkTaintChecker::checkLocation(SVal l, bool isLoad, const Stmt *LoadS,
       // report a bug!
       ExplodedNode *loc = C.generateSink();
       if (loc) {
-        BugReport *bug = new BugReport(
-            *this->BT, "Tainted, unconstrained value used in array index", loc);
+        BugReport *bug = new BugReport(*this->BT, "bug2", loc);
         C.emitReport(bug);
       }
     }

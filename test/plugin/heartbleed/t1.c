@@ -1,3 +1,5 @@
+//RUN: %clang -c -Xclang -analyze -Xclang -analyzer-checker=chx -Xclang -verify %s -o /dev/null
+
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -28,7 +30,7 @@ int main(int argc, char *argv[]) {
         memcpy(buf, data_array, size);
       }
 
-      memcpy(buf, data_array, size);
+      memcpy(buf, data_array, size); // expected-warning{{bug1}}
     }
 
     close(fd);

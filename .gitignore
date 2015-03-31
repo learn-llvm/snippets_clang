@@ -6,3 +6,5 @@
 *.bc
 build/
 .DS_Store
+
+Output/
