@@ -2,8 +2,8 @@
 #include "heartbleed.cc"
 
 extern "C" void clang_registerCheckers(CheckerRegistry &registry) {
-  registry.addChecker<chx::MyDZChecker>("chx.DZChecker", "DZChecker");
-  registry.addChecker<chx::NetworkTaintChecker>("chx.NetChecker", "NetChecker");
+  registry.addChecker<chx::MyDZChecker>("chx.DBZ", "MyDBZ");
+  registry.addChecker<chx::NetworkTaintChecker>("chx.Net", "MyNet");
 }
 
 extern "C" const char clang_analyzerAPIVersionString[] =

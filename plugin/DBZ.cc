@@ -17,10 +17,10 @@ class MyDZChecker
                  CheckerContext &C) const;
 
  public:
-  void checkPreStmt(BinaryOperator const *B, CheckerContext &C) const;
   MyDZChecker()
-      : BT(std::make_unique<BugType>(this, "hello-my-div-by-zero",
-                                     categories::LogicError)) {}
+      : BT(std::make_unique<BugType>(this, "chx-DBZ", categories::LogicError)) {
+  }
+  void checkPreStmt(BinaryOperator const *B, CheckerContext &C) const;
   void checkPostCall(CallEvent const &, CheckerContext &) const;
 };
 
@@ -28,7 +28,7 @@ void MyDZChecker::reportBug(const char *Msg, ProgramStateRef StateZero,
                             CheckerContext &C) const {
   if (ExplodedNode *N = C.generateSink(StateZero)) {
     BugReport *R = new BugReport(*BT, Msg, N);
-    bugreporter::trackNullOrUndefValue(N, bugreporter::GetDenomExpr(N), *R);
+    // bugreporter::trackNullOrUndefValue(N, bugreporter::GetDenomExpr(N), *R);
     C.emitReport(R);
   }
 }
@@ -36,20 +36,23 @@ void MyDZChecker::reportBug(const char *Msg, ProgramStateRef StateZero,
 void MyDZChecker::checkPreStmt(const BinaryOperator *B,
                                CheckerContext &C) const {
   BinaryOperator::Opcode Op = B->getOpcode();
-  if (Op != BO_Div && Op != BO_Rem && Op != BO_DivAssign && Op != BO_RemAssign)
+  if (Op != BinaryOperatorKind::BO_Div && Op != BinaryOperatorKind::BO_Rem &&
+      Op != BinaryOperatorKind::BO_DivAssign &&
+      Op != BinaryOperatorKind::BO_RemAssign)
     return;
 
   if (!B->getRHS()->getType()->isScalarType()) return;
 
   SVal Denom = C.getState()->getSVal(B->getRHS(), C.getLocationContext());
-  Optional<DefinedSVal> DV = Denom.getAs<DefinedSVal>();
+  SVal Numer = C.getState()->getSVal(B->getLHS(), C.getLocationContext());
+  Optional<DefinedSVal> DVR = Denom.getAs<DefinedSVal>();
+  Optional<DefinedSVal> DVL = Numer.getAs<DefinedSVal>();
 
-  if (!DV) return;
+  if (!DVR) return;
 
-  // Check for divide by zero.
   ConstraintManager &CM = C.getConstraintManager();
   ProgramStateRef stateNotZero, stateZero;
-  std::tie(stateNotZero, stateZero) = CM.assumeDual(C.getState(), *DV);
+  std::tie(stateNotZero, stateZero) = CM.assumeDual(C.getState(), *DVR);
 
   if (stateNotZero != nullptr) {
     stateNotZero->dump();
@@ -58,19 +61,19 @@ void MyDZChecker::checkPreStmt(const BinaryOperator *B,
     stateZero->dump();
   }
 
-  if (!stateNotZero) {
+  // surely 0
+  if (stateNotZero == nullptr) {
     assert(stateZero);
-    reportBug("my-divide-by-zero", stateZero, C);
+    reportBug("chx.DBZ - DBZ", stateZero, C);
     return;
   }
 
   /// std::cerr << (stateNotZero != nullptr) << "  " << (stateZero != nullptr)
   ///           << '\n';
 
-  bool TaintedD = C.getState()->isTainted(*DV);
-  /// if (TaintedD) {
+  bool TaintedD = C.getState()->isTainted(*DVR);
   if ((stateNotZero != nullptr && stateZero != nullptr && TaintedD)) {
-    reportBug("tainted, possibly div zero", stateZero, C);
+    reportBug("chx.DBZ - tainted DBZ", stateZero, C);
     return;
   }
 
