@@ -1,25 +1,25 @@
 set(CLANG_LIBS
-  -Wl,--start-group
-  -lclangAST
-  -lclangAnalysis
-  -lclangBasic
-  -lclangDriver
-  -lclangEdit
-  -lclangFrontend
+  -lclangASTMatchers
+  -lclangDynamicASTMatchers
+  -lclangTooling
   -lclangFrontendTool
-  -lclangLex
+  -lclangFrontend
+  -lclangDriver
+  -lclangSerialization
+  -lclangCodeGen
   -lclangParse
   -lclangSema
-  -lclangEdit
-  -lclangASTMatchers
-  -lclangRewrite
-  -lclangRewriteFrontend
   -lclangStaticAnalyzerFrontend
   -lclangStaticAnalyzerCheckers
   -lclangStaticAnalyzerCore
-  -lclangSerialization
-  -lclangTooling
-  -Wl,--end-group
+  -lclangARCMigrate
+  -lclangRewriteFrontend
+  -lclangRewrite
+  -lclangAnalysis
+  -lclangEdit
+  -lclangAST
+  -lclangLex
+  -lclangBasic
   )
 
 set(CLANG_TOOLS

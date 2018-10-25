@@ -4,6 +4,7 @@
 *.a
 *.ll
 *.bc
+*.s
 build/
 .DS_Store
 
