@@ -1,11 +1,11 @@
-#include "llvm/Support/CommandLine.h"
-#include "llvm/Support/Regex.h"
 #include "clang/AST/ASTConsumer.h"
 #include "clang/AST/ASTContext.h"
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/Frontend/CompilerInstance.h"
 #include "clang/Frontend/FrontendAction.h"
 #include "clang/Tooling/Tooling.h"
+#include "llvm/Support/CommandLine.h"
+#include "llvm/Support/Regex.h"
 
 namespace cl = llvm::cl;
 using namespace clang;
@@ -26,8 +26,8 @@ class ASTFilter : public RecursiveASTVisitor<ASTFilter<T> > {
       std::string Error;
       Filter = new llvm::Regex(FilterString);
       if (!Filter->isValid(Error))
-        llvm::report_fatal_error("malformed filter expression: " +
-                                 FilterString + ": " + Error);
+        llvm::report_fatal_error(
+            "malformed filter expression: " + FilterString + ": " + Error);
     }
   }
 
@@ -646,6 +646,8 @@ bool ASTPrinter::VisitFunctionDecl(FunctionDecl *D) {
     case FunctionDecl::TK_DependentFunctionTemplateSpecialization:
       // TODO: getDependentSpecializationInfo()
       break;
+    default:
+      break;
   }
 
   return true;
@@ -862,7 +864,7 @@ bool ASTPrinter::VisitExpr(Expr *E) {
 }
 
 bool ASTPrinter::VisitPredefinedExpr(PredefinedExpr *E) {
-  switch (E->getIdentType()) {
+  switch (E->getIdentKind()) {
     default:
       llvm_unreachable("unknown IdentType");
     case PredefinedExpr::Func:
@@ -890,7 +892,7 @@ bool ASTPrinter::VisitDeclRefExpr(DeclRefExpr *E) {
 
 bool ASTPrinter::VisitIntegerLiteral(IntegerLiteral *E) {
   bool isSigned = E->getType()->isSignedIntegerType();
-  OS << ' ' << E->getValue().toString(10, isSigned);
+  OS << ' ' << E->getValue();
   return true;
 }
 
@@ -986,16 +988,14 @@ bool ASTPrinter::VisitDesignatedInitExpr(DesignatedInitExpr *E) {
   // TODO: usesGNUSyntax()
 
   // FIXME: move into RAV?
-  for (DesignatedInitExpr::designators_iterator D = E->designators_begin(),
-                                                DEnd = E->designators_end();
-       D != DEnd; ++D) {
-    if (D->isFieldDesignator()) {
-      if (FieldDecl *Field = D->getField()) {
-        printDeclRef(Field, D->getFieldLoc());
-      } else {
-        TraverseDeclarationNameInfo(
-            DeclarationNameInfo(D->getFieldName(), D->getFieldLoc()));
-      }
+  for (auto const &D : E->designators()) {
+    if (D.isFieldDesignator()) {
+      // if (auto Field = D.getField()) {
+      //   printDeclRef(Field, D.getFieldLoc());
+      // } else {
+      //   TraverseDeclarationNameInfo(
+      //       DeclarationNameInfo(D.getFieldName(), D.getFieldLoc()));
+      // }
     } else {
       // TODO: getFirstExprIndex()
     }
@@ -1282,13 +1282,14 @@ class ASTPrinterAction : public ASTFrontendAction {
   const ASTPrinterOptions &Options;
 };
 
-static bool runTool(cl::list<std::string> Argv, FrontendAction *ToolAction) {
+static bool runTool(cl::list<std::string> &Argv,
+                    std::unique_ptr<FrontendAction> ToolAction) {
   std::vector<std::string> CommandLine;
   CommandLine.push_back("clang-tool");
   CommandLine.push_back("-fsyntax-only");
   for (unsigned i = 0; i < Argv.size(); ++i) CommandLine.push_back(Argv[i]);
   FileManager Files((FileSystemOptions()));
-  ToolInvocation Invocation(CommandLine, ToolAction, &Files);
+  ToolInvocation Invocation(CommandLine, std::move(ToolAction), &Files);
   return Invocation.run();
 }
 
@@ -1306,18 +1307,11 @@ static cl::list<std::string> Argv(cl::Positional,
                                   cl::desc("Compiler arguments"));
 
 int main(int argc, const char *argv[]) {
-#if 0
-  CommandLineClangTool Tool;
-  Tool.initialize(argc, argv);
-  return Tool.run(newFrontendActionFactory<ASTPrinterAction>());
-#else
-  // runToolOnCode(new ASTPrinterAction, argv[1]);
   cl::ParseCommandLineOptions(argc, argv);
   ASTPrinterOptions Options;
   Options.EnableLoc = EnableLoc;
   Options.EnableImplicit = EnableImplicit;
   Options.FilterString = FilterString;
-  runTool(Argv, new ASTPrinterAction(Options));
+  runTool(Argv, std::make_unique<ASTPrinterAction>(Options));
   return 0;
-#endif
 }

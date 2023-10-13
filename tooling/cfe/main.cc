@@ -1,6 +1,6 @@
 #include "llvm/ADT/StringMap.h"
 #include "llvm/Support/CommandLine.h"
-#include "llvm/Support/Host.h"
+#include "llvm/TargetParser/Host.h"
 #include "clang/AST/ASTContext.h"
 #include "clang/AST/ASTConsumer.h"
 #include "clang/Basic/Diagnostic.h"
@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
   CompilerInstance CI;
   DiagnosticOptions diagnosticOptions;
   CI.createDiagnostics(nullptr, true);
-  auto PTO = std::make_shared<TargetOptions>(TargetOptions());
+  auto PTO = std::make_shared<clang::TargetOptions>(clang::TargetOptions());
   {
     llvm::errs() << "targetTriple:" << sys::getDefaultTargetTriple() << '\n'
                  << "cpu name: " << sys::getHostCPUName() << '\n'
@@ -78,20 +78,22 @@ int main(int argc, char **argv) {
       }
     }
   }
-  auto const *pFile = CI.getFileManager().getFile(FileName);
+  auto pFile = CI.getFileManager().getFile(FileName);
+  auto ff = CI.getFileManager().getFileRef(FileName);
   if (!pFile) {
     errs() << "File not found: " << FileName << '\n';
     return 1;
   }
+  auto FE = pFile.get();
   {
-    errs() << "name: " << pFile->getName() << '\n';
-    errs() << "dir: " << pFile->getDir()->getName() << '\n';
-    errs() << "size: " << pFile->getSize() << '\n';
-    errs() << "uid:" << pFile->getUID() << " uniqueID: " << pFile->getUID()
+    errs() << "name: " << FE->getName() << '\n';
+    errs() << "dir: " << FE->getDir()->getName() << '\n';
+    errs() << "size: " << FE->getSize() << '\n';
+    errs() << "uid:" << FE->getUID() << " uniqueID: " << FE->getUID()
            << '\n';
   }
   SourceManager &sm = CI.getSourceManager();
-  sm.setMainFileID(sm.createFileID(pFile, SourceLocation(), SrcMgr::C_User));
+  sm.setMainFileID(sm.createFileID(*ff, SourceLocation(), SrcMgr::C_User));
   CI.getDiagnosticClient().BeginSourceFile(CI.getLangOpts(), 0);
   /// ParseAST(CI.getSema());
   // Print AST statistics
