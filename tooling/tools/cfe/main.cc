@@ -9,11 +9,11 @@
 #include "clang/Basic/SourceManager.h"
 #include "clang/Basic/LangOptions.h"
 #include "clang/Basic/TargetInfo.h"
-#include "clang/Basic/TargetOptions.h"
 #include "clang/Frontend/ASTConsumers.h"
 #include "clang/Frontend/CompilerInstance.h"
 #include "clang/Frontend/TextDiagnosticPrinter.h"
 #include "clang/Lex/Preprocessor.h"
+#include "clang/Lex/PreprocessorOptions.h"
 #include "clang/Parse/Parser.h"
 #include "clang/Parse/ParseAST.h"
 
@@ -28,7 +28,6 @@ int main(int argc, char **argv) {
   DiagnosticOptions diagnosticOptions;
   CI.createDiagnostics(nullptr, true);
   auto PTO = std::make_shared<TargetOptions>(TargetOptions());
-  PTO->Triple = sys::getDefaultTargetTriple();
   {
     llvm::errs() << "targetTriple:" << sys::getDefaultTargetTriple() << '\n'
                  << "cpu name: " << sys::getHostCPUName() << '\n'
@@ -79,7 +78,7 @@ int main(int argc, char **argv) {
       }
     }
   }
-  FileEntry const *pFile = CI.getFileManager().getFile(FileName);
+  auto const *pFile = CI.getFileManager().getFile(FileName);
   if (!pFile) {
     errs() << "File not found: " << FileName << '\n';
     return 1;

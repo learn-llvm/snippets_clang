@@ -1,15 +1,11 @@
-#include <sstream>
 #include <cstddef>
-#include <string>
-
-#include "clang/AST/AST.h"
 #include "clang/AST/ASTConsumer.h"
 #include "clang/Frontend/ASTConsumers.h"
-#include "clang/Frontend/FrontendActions.h"
 #include "clang/Frontend/CompilerInstance.h"
+#include "clang/Frontend/FrontendActions.h"
+#include "clang/Rewrite/Core/Rewriter.h"
 #include "clang/Tooling/CommonOptionsParser.h"
 #include "clang/Tooling/Tooling.h"
-#include "clang/Rewrite/Core/Rewriter.h"
 #include "llvm/Support/raw_ostream.h"
 
 using namespace clang;
@@ -30,7 +26,7 @@ class MyASTConsumer : public ASTConsumer {
   }
 
   // This gets called only when the full TU is completely parsed.
-  void HandleTranslationUnit(ASTContext &Context) {
+  void HandleTranslationUnit(ASTContext &Context) override {
     llvm::errs() << "********* The whole TU *************\n";
     Context.getTranslationUnitDecl()->dump();
 
@@ -39,7 +35,7 @@ class MyASTConsumer : public ASTConsumer {
       llvm::errs() << "Decl in the TU:\n";
       D->dump();
       llvm::errs() << "Its start location is: '"
-                   << D->getLocStart().printToString(Context.getSourceManager())
+                   << D->getLocation().printToString(Context.getSourceManager())
                    << "'\n";
     }
   }
@@ -52,9 +48,6 @@ class MyFrontendAction : public ASTFrontendAction {
     SourceManager &SM = TheRewriter.getSourceMgr();
     llvm::errs() << "** EndSourceFileAction for: "
                  << SM.getFileEntryForID(SM.getMainFileID())->getName() << "\n";
-
-    // Now emit the rewritten buffer.
-    // TheRewriter.getEditBuffer(SM.getMainFileID()).write(llvm::outs());
   }
 
   std::unique_ptr<ASTConsumer> CreateASTConsumer(CompilerInstance &CI,
@@ -65,7 +58,7 @@ class MyFrontendAction : public ASTFrontendAction {
                  << SM.getFileEntryForID(SM.getMainFileID())->getName() << "\n";
     SM.PrintStats();
     TheRewriter.setSourceMgr(CI.getSourceManager(), CI.getLangOpts());
-    return llvm::make_unique<MyASTConsumer>(TheRewriter);
+    return std::make_unique<MyASTConsumer>(TheRewriter);
   }
 
  private:
@@ -73,7 +66,12 @@ class MyFrontendAction : public ASTFrontendAction {
 };
 
 int main(int argc, const char **argv) {
-  tooling::CommonOptionsParser op(argc, argv, ToolingSampleCategory);
-  tooling::ClangTool Tool(op.getCompilations(), op.getSourcePathList());
+  auto op =
+      tooling::CommonOptionsParser::create(argc, argv, ToolingSampleCategory);
+  if (auto E = op.takeError()) {
+    llvm::errs() << E << "\n";
+    return 1;
+  }
+  tooling::ClangTool Tool(op->getCompilations(), op->getSourcePathList());
   return Tool.run(tooling::newFrontendActionFactory<MyFrontendAction>().get());
 }

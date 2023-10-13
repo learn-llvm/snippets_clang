@@ -1,8 +1,3 @@
-//===----------------------------------------------------------------------===//
-// free error
-//
-//===----------------------------------------------------------------------===//
-
 #include "llvm/Support/CommandLine.h"
 #include "llvm/Support/Regex.h"
 #include "clang/AST/ASTConsumer.h"
@@ -10,9 +5,6 @@
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/Frontend/CompilerInstance.h"
 #include "clang/Frontend/FrontendAction.h"
-#if 0
-#include "clang/Tooling/CommandLineClangTool.h"
-#endif
 #include "clang/Tooling/Tooling.h"
 
 namespace cl = llvm::cl;

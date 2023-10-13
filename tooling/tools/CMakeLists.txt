@@ -1,0 +1,56 @@
+# vim: set ft=cmake ts=2 sw=0 tw=2:
+
+cmake_minimum_required(VERSION 3.25)
+
+project(my-libtooling)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions -funwind-tables -fno-rtti")
+set (CMAKE_EXPORT_COMPILE_COMMANDS 1)
+
+find_package(LLVM REQUIRED CONFIG)
+message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
+message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
+find_package(Clang REQUIRED CONFIG)
+message(STATUS "Using ClangConfig.cmake")
+
+message(STATUS "LLVM includes: ${LLVM_INCLUDE_DIRS}")
+message(STATUS "Clang includes: ${CLANG_INCLUDE_DIRS}")
+include_directories(${LLVM_INCLUDE_DIRS} ${CLANG_INCLUDE_DIRS})
+separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
+
+message(STATUS "LLVM defs: ${LLVM_DEFINITIONS_LIST}")
+add_definitions(${LLVM_DEFINITIONS_LIST})
+
+set(CLANG_LIBS
+  clangAST
+  clangASTMatchers
+  clangBasic
+  clangDriver
+  clangFormat
+  clangFrontend
+  clangIndex
+  clangLex
+  clangRewrite
+  clangSema
+  clangSerialization
+  clangTooling
+  clangToolingCore
+  clangToolingInclusions
+  clangToolingInclusionsStdlib
+  clangToolingSyntax
+)
+
+set(CLANG_TOOLS
+  # ast
+  # complex
+  # clang_check
+  # cfe
+  # rewrite1
+  # rewrite2
+  # rewrite3
+  toplevel_decls
+)
+foreach(tool ${CLANG_TOOLS})
+  add_subdirectory(${tool})
+endforeach()
