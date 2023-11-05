@@ -74,8 +74,8 @@ def print_func(cursor: Cursor):
 
 
 def analyze_tu(fpath: str):
-    fileKind = get_kind_from_filename(fpath)
-    if fileKind == FileKind.NN:
+    file_kind = get_kind_from_filename(fpath)
+    if file_kind == FileKind.NN:
         return
     tu = Index.create().parse(fpath)
     print(f"=== {fpath} ===")
@@ -91,7 +91,7 @@ def analyze_dir(fpath: str):
         elif os.path.isfile(fullpath):
             analyze_tu(fullpath)
         else:
-            print(f"{fpath} not a file/dir", file=sys.stderr)
+            print(f"{fpath} not a C/C++ file or a directory", file=sys.stderr)
 
 
 if __name__ == "__main__":
