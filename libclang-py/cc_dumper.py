@@ -8,7 +8,7 @@ from enum import Enum
 from clang.cindex import Cursor, CursorKind, Index, SourceLocation
 
 
-class Node(object):
+class Node:
     def __init__(self, node_id: int, fqn: str, location: SourceLocation) -> None:
         self.id: int = node_id
         self.fqn: str = fqn
@@ -46,7 +46,7 @@ def parse_args(argv) -> argparse.Namespace:
     )
     parser.add_argument("-a", "--analyze", action="store_true" , required=False, help="analyze and print")
     parser.add_argument(
-        "files", metavar="FILE", nargs="+", action="store", help="FILES to be analyzed"
+        "files", metavar="FILE", nargs="+", action="store", help="FILES to be analyzed",
     )
     return parser.parse_args(argv)
 
